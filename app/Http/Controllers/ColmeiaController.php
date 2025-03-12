@@ -23,13 +23,9 @@ class ColmeiaController extends Controller
 
     public function cadastrar(Request $request)
     {
-        $request->session()->token();
-        csrf_token();
-
         $request->validate([
             "nome" => "required",
             "data_criacao" => "required",
-            "data_alteracao" => "required",
             "genero_id" => "required",
             "especie_id" => "required",
             "status_id" => "required",
