@@ -30,9 +30,9 @@ class Colmeia extends Model
     public function cadastrar($dados)
     {
         try {
-            $resposta = new stdClass;
-            $resposta->msg = NULL;
-            $resposta->erro = FALSE;
+            $retorno = new stdClass;
+            $retorno->msg = NULL;
+            $retorno->erro = FALSE;
 
             $nome = isset($dados["nome"]) ? $dados["nome"] : NULL;
             $data_criacao = isset($dados["data_criacao"]) ? $dados["data_criacao"] : NULL;
@@ -58,13 +58,13 @@ class Colmeia extends Model
                 "doadora_id2" => $doadora_id2,
             ]);
 
-            return $resposta;
+            return $retorno;
         } catch (\Throwable $th) {
-            $resposta = new stdClass;
-            $resposta->msg = $th->getMessage();
-            $resposta->erro = TRUE;
+            $retorno = new stdClass;
+            $retorno->msg = $th->getMessage();
+            $retorno->erro = TRUE;
 
-            return $resposta;
+            return $retorno;
         }
     }
 }
