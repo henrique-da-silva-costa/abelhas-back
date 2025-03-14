@@ -44,6 +44,7 @@ class Colmeia extends Model
             $doadora_id = isset($dados["doadora_id"]) ? $dados["doadora_id"] : NULL;
             $tipo_divisao_id = isset($dados["tipo_divisao_id"]) ? $dados["tipo_divisao_id"] : NULL;
             $doadora_id2 = isset($dados["doadora_id2"]) ? $dados["doadora_id2"] : NULL;
+            $usuario_id = isset($dados["usuario_id"]) ? $dados["usuario_id"] : NULL;
 
             DB::table($this->tabela)->insert([
                 "nome" => $nome,
@@ -56,6 +57,7 @@ class Colmeia extends Model
                 "doadora_id" => $doadora_id,
                 "tipo_divisao_id" => $tipo_divisao_id,
                 "doadora_id2" => $doadora_id2,
+                "usuario_id" => $usuario_id,
             ]);
 
             return $retorno;

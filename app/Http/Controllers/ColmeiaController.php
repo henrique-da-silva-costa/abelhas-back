@@ -29,6 +29,7 @@ class ColmeiaController extends Controller
             "genero_id" => "required",
             "especie_id" => "required",
             "status_id" => "required",
+            "usuario_id" => "required",
         ]);
 
         $dados = $request->all();

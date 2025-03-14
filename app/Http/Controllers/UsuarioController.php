@@ -16,25 +16,32 @@ class UsuarioController extends Controller
 
     public function login(Request $request)
     {
+        $request->validate([
+            "email" => "required",
+            "senha" => "required"
+        ]);
+
         $inputs = $request->all();
 
-        $existeUsuario = $this->usuario->existeUsuario($inputs);
+        $usuario = $this->usuario->existeUsuario($inputs);
 
-        if ($existeUsuario) {
+        if (!$usuario) {
             return response()->json(["erro" => TRUE, "msg" => "E-mail ou senha incorreto"]);
         }
 
-        return response()->json(["erro" => FALSE, "msg" => "Usuário cadastrado com sucesso!"]);
+        return response()->json(["erro" => FALSE, "usuario" => ["id" => $usuario->id, "email" => $usuario->email, "nome" => $usuario->nome]]);
     }
 
     public function verificarEmail(Request $request)
     {
+        $request->validate(["email" => "required"]);
+
         $inputs = $request->all();
 
         $existeEmail = $this->usuario->existeEmail($inputs);
 
         if ($existeEmail) {
-            return response()->json(["erro" => TRUE, "msg" => "E-mail já cadastrado!"]);
+            return response()->json(["erro" => TRUE, "msg" => "E-mail não encontrado!"]);
         }
 
         return response()->json(["erro" => FALSE, "msg" => "E-mail disponível!"]);
@@ -62,12 +69,34 @@ class UsuarioController extends Controller
             return response()->json(["erro" => TRUE, "msg" => $cadastrar->msg]);
         }
 
-        return response()->json(["msg" => "Usuário cadastrado com sucesso!"]);
+        return response()->json(["erro" => FALSE, "msg" => "Usuário cadastrado com sucesso!"]);
     }
 
     public function recuperarSenha(Request $request)
     {
+        $request->validate([
+            "email" => "required",
+            "senha" => "required",
+            "novaSenha" => "required",
+            "confirmaSenha" => "required"
+        ]);
+
         $inputs = $request->all();
+
+        $email = isset($inputs["email"]) ? $inputs["email"] : NULL;
+        $novaSenha = isset($inputs["novaSenha"]) ? $inputs["novaSenha"] : NULL;
+        $confirmaSenha = isset($inputs["confirmaSenha"]) ? $inputs["confirmaSenha"] : NULL;
+
+
+        if ($novaSenha != $confirmaSenha) {
+            return response()->json(["erro" => TRUE, "msg" => "As senhas não são iguais"]);
+        }
+
+        $existeEmail = $this->usuario->existeEmail($inputs);
+
+        if ($existeEmail) {
+            return response()->json(["erro" => TRUE, "msg" => "E-mail não encontrado"]);
+        }
 
         $recuperarSenha = $this->usuario->recuperarSenha($inputs);
 

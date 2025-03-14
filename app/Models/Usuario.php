@@ -51,7 +51,7 @@ class Usuario extends Model
 
             $dado = DB::table($this->tabela)->where("email", "=", $email)->first("email");
 
-            if ($dado) {
+            if (!$dado) {
                 return TRUE;
             }
 
@@ -67,17 +67,17 @@ class Usuario extends Model
             $email = isset($dados["email"]) ? $dados["email"] : NULL;
             $senha = isset($dados["senha"]) ? $dados["senha"] : NULL;
 
-            $usuario = DB::table($this->tabela)->where("email", "=", $email)->first(["email", "senha"]);
+            $usuario = DB::table($this->tabela)->where("email", "=", $email)->first();
 
             if (!$usuario) {
-                return TRUE;
+                return FALSE;
             }
 
             if (!Hash::check($senha, $usuario->senha)) {
-                return TRUE;
+                return FALSE;
             }
 
-            return FALSE;
+            return $usuario;
         } catch (\Throwable $th) {
             return NULL;
         }
