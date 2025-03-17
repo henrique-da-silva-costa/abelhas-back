@@ -47,6 +47,21 @@ class UsuarioController extends Controller
         return response()->json(["erro" => FALSE, "msg" => "E-mail disponível!"]);
     }
 
+    public function verificarEmailApp(Request $request)
+    {
+        $request->validate(["email" => "required"]);
+
+        $inputs = $request->all();
+
+        $existeEmail = $this->usuario->existeEmail($inputs);
+
+        if ($existeEmail) {
+            return response()->json(["erro" => TRUE, "msg" => "E-mail não encontrado!"]);
+        }
+
+        return response()->json(["erro" => FALSE, "msg" => "E-mail disponível!"]);
+    }
+
     public function cadastrar(Request $request)
     {
         $request->validate([
