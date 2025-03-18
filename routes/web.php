@@ -20,6 +20,11 @@ Route::post("/usuario/cadastrar", [UsuarioController::class, "cadastrar"])->name
 
 // Colmeia
 Route::get("/", [ColmeiaController::class, "pegarTodos"])->name("ColmeiaController.pegarTodos");
+Route::get("/colmeias/matrizes", [ColmeiaController::class, "pegarColmeiasMatrizes"])->name("ColmeiaController.pegarColmeiasMatrizes");
+Route::get("/generos", [ColmeiaController::class, "pegarGeneros"])->name("ColmeiaController.pegarGeneros");
+// Route::get("/especies", [ColmeiaController::class, "pegarEspecies"])->name("ColmeiaController.pegarEspecies");
+Route::get("/especies", [ColmeiaController::class, "pegarPorGeneroId"])->name("ColmeiaController.pegarPorGeneroId");
+Route::get("/status", [ColmeiaController::class, "pegarStatus"])->name("ColmeiaController.pegarStatus");
 Route::get("/colmeias", [ColmeiaController::class, "pegarPorUsuarioId"])->name("ColmeiaController.pegarPorUsuarioId");
 Route::get("/colmeia", [ColmeiaController::class, "pegarPorId"])->name("ColmeiaController.pegarPorId");
 Route::post("/colmeia/cadastrar", [ColmeiaController::class, "cadastrar"])->name("ColmeiaController.cadastrar");

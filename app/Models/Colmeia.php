@@ -5,7 +5,6 @@ namespace App\Models;
 use App\Http\Controllers\Tabela;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
-use Ramsey\Uuid\Type\Integer;
 use stdClass;
 
 class Colmeia extends Model
@@ -21,6 +20,24 @@ class Colmeia extends Model
     {
         try {
             $dados = DB::table($this->tabela)->get();
+
+            return $dados;
+        } catch (\Throwable $th) {
+            return [];
+        }
+    }
+
+    public function pegarColmeiasMatrizes($usuario_id)
+    {
+        try {
+            if (!is_numeric($usuario_id)) {
+                return [];
+            }
+
+            $dados = DB::table($this->tabela)
+                ->where("status_id", "=", 4)
+                ->where("usuario_id", "=", $usuario_id)
+                ->get();
 
             return $dados;
         } catch (\Throwable $th) {

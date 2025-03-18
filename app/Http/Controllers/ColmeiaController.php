@@ -3,15 +3,25 @@
 namespace App\Http\Controllers;
 
 use App\Models\Colmeia;
+use App\Models\Especie;
+use App\Models\Genero;
+use App\Models\Status;
+use Hamcrest\Collection\IsEmptyTraversable;
 use Illuminate\Http\Request;
 
 class ColmeiaController extends Controller
 {
     private $colmeia;
+    private $genero;
+    private $especie;
+    private $status;
 
     public function __construct()
     {
         $this->colmeia = new Colmeia;
+        $this->genero = new Genero;
+        $this->especie = new Especie;
+        $this->status = new Status;
     }
 
     public function pegarTodos()
@@ -19,6 +29,37 @@ class ColmeiaController extends Controller
         $colmeias = $this->colmeia->pegarTodos();
 
         return response()->json($colmeias);
+    }
+
+    public function pegarColmeiasMatrizes(Request $request)
+    {
+
+        $usuario_id = isset($request["usuario_id"]) ? $request["usuario_id"] : NULL;
+
+        $colmeias = $this->colmeia->pegarColmeiasMatrizes($usuario_id);
+
+        return response()->json($colmeias);
+    }
+
+    public function pegarGeneros()
+    {
+        $generos = $this->genero->pegarTodos();
+
+        return response()->json($generos);
+    }
+
+    public function pegarEspecies()
+    {
+        $especies = $this->especie->pegarTodos();
+
+        return response()->json($especies);
+    }
+
+    public function pegarStatus()
+    {
+        $status = $this->status->pegarTodos();
+
+        return response()->json($status);
     }
 
     public function pegarPorId(Request $request)
@@ -37,6 +78,15 @@ class ColmeiaController extends Controller
         $colmeias = $this->colmeia->pegarPorUsuarioId($usuario_id);
 
         return response()->json($colmeias);
+    }
+
+    public function pegarPorGeneroId(Request $request)
+    {
+        $genero_id = isset($request["genero_id"]) ? $request["genero_id"] : NULL;
+
+        $especies = $this->especie->pegarPorGeneroId($genero_id);
+
+        return response()->json($especies);
     }
 
     public function cadastrar(Request $request)
