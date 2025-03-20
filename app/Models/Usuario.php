@@ -51,7 +51,7 @@ class Usuario extends Model
 
             $dado = DB::table($this->tabela)->where("email", "=", $email)->first("email");
 
-            if (!$dado) {
+            if ($dado) {
                 return TRUE;
             }
 

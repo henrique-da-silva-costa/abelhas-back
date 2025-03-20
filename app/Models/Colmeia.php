@@ -35,13 +35,31 @@ class Colmeia extends Model
             }
 
             $dados = DB::table($this->tabela)
-                ->where("status_id", "=", 4)
+                ->where("status_id", "=", 2)
                 ->where("usuario_id", "=", $usuario_id)
                 ->get();
 
             return $dados;
         } catch (\Throwable $th) {
             return [];
+        }
+    }
+
+    public function pegarColmeiaMatriz($id)
+    {
+        try {
+            if (!is_numeric($id)) {
+                return NULL;
+            }
+
+            $dados = DB::table($this->tabela)
+                ->where("id", "=", $id)
+                ->where("status_id", "=", 2)
+                ->first();
+
+            return $dados;
+        } catch (\Throwable $th) {
+            return NULL;
         }
     }
 
@@ -62,7 +80,7 @@ class Colmeia extends Model
                 return [];
             }
 
-            $dados = DB::table($this->tabela)->where("usuario_id", "=", $usuario_id)->paginate(4);
+            $dados = DB::table($this->tabela)->where("usuario_id", "=", $usuario_id)->orderBy("id", "desc")->paginate(4);
 
             return $dados;
         } catch (\Throwable $th) {

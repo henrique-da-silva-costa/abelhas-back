@@ -124,6 +124,10 @@ class ColmeiaController extends Controller
 
         $inputs = $request->all();
 
+        $id = isset($inputs["id"]) ? $inputs["id"] : NULL;
+
+        print_r($id);
+
         $editar = $this->colmeia->editar($inputs);
 
         if ($editar->erro) {
