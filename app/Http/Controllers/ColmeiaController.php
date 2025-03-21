@@ -6,7 +6,7 @@ use App\Models\Colmeia;
 use App\Models\Especie;
 use App\Models\Genero;
 use App\Models\Status;
-use Hamcrest\Collection\IsEmptyTraversable;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class ColmeiaController extends Controller
@@ -125,8 +125,28 @@ class ColmeiaController extends Controller
         $inputs = $request->all();
 
         $id = isset($inputs["id"]) ? $inputs["id"] : NULL;
+        $status_id = isset($inputs["status_id"]) ? $inputs["status_id"] : NULL;
 
-        print_r($id);
+        $colmeia = $this->colmeia->pegarPorId($id);
+
+        $data_criacao = Carbon::create($colmeia->data_criacao);
+
+        $hoje = CArbon::now();
+
+        $diferenca = $data_criacao->diffInDays($hoje);
+
+        $colmeiaMatriz = $this->colmeia->pegarColmeiaMatriz($id);
+
+        if ($colmeiaMatriz && $status_id == 1) {
+            return response()->json(["erro" => TRUE, "campo" => "status_id", "msg" => "Colmeia matriz não pode ser divisão"]);
+        }
+
+        if (!$colmeiaMatriz) {
+            if ($status_id == 2 && $diferenca < 15) {
+                return response()->json(["erro" => TRUE, "campo" => "status_id", "msg" => "Para se tornar matriz deve ter pelomenos 15 dias"]);
+            }
+        }
+
 
         $editar = $this->colmeia->editar($inputs);
 

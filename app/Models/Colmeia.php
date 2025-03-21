@@ -57,7 +57,11 @@ class Colmeia extends Model
                 ->where("status_id", "=", 2)
                 ->first();
 
-            return $dados;
+            if ($dados) {
+                return TRUE;
+            }
+
+            return FALSE;
         } catch (\Throwable $th) {
             return NULL;
         }
