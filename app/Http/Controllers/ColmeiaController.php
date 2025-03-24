@@ -41,6 +41,16 @@ class ColmeiaController extends Controller
         return response()->json($colmeias);
     }
 
+    public function pegarColmeiasMatrizesPaginacao(Request $request)
+    {
+
+        $usuario_id = isset($request["usuario_id"]) ? $request["usuario_id"] : NULL;
+
+        $colmeias = $this->colmeia->pegarColmeiasMatrizesPaginacao($usuario_id);
+
+        return response()->json($colmeias);
+    }
+
     public function pegarGeneros()
     {
         $generos = $this->genero->pegarTodos();
@@ -131,7 +141,7 @@ class ColmeiaController extends Controller
 
         $data_criacao = Carbon::create($colmeia->data_criacao);
 
-        $hoje = CArbon::now();
+        $hoje = Carbon::now();
 
         $diferenca = $data_criacao->diffInDays($hoje);
 

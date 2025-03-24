@@ -10,6 +10,6 @@ class Tabela
     const GENERO = "genero";
     const STATUS = "status";
     const TIPO_DIVISAO = "tipo_divisao";
-    const TIPO_DOACAO = "tipo_docao";
+    const TIPO_DOACAO = "tipo_doacao";
     const USUARIO = "usuario";
 }

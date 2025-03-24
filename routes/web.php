@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ColmeiaController;
+use App\Http\Controllers\DoadoraController;
 use App\Http\Controllers\UsuarioController;
 use Illuminate\Support\Facades\Route;
 
@@ -21,8 +22,8 @@ Route::post("/usuario/cadastrar", [UsuarioController::class, "cadastrar"])->name
 // Colmeia
 Route::get("/", [ColmeiaController::class, "pegarTodos"])->name("ColmeiaController.pegarTodos");
 Route::get("/colmeias/matrizes", [ColmeiaController::class, "pegarColmeiasMatrizes"])->name("ColmeiaController.pegarColmeiasMatrizes");
+Route::get("/colmeias/matrizes/paginacao", [ColmeiaController::class, "pegarColmeiasMatrizesPaginacao"])->name("ColmeiaController.pegarColmeiasMatrizesPaginacao");
 Route::get("/generos", [ColmeiaController::class, "pegarGeneros"])->name("ColmeiaController.pegarGeneros");
-// Route::get("/especies", [ColmeiaController::class, "pegarEspecies"])->name("ColmeiaController.pegarEspecies");
 Route::get("/especies", [ColmeiaController::class, "pegarPorGeneroId"])->name("ColmeiaController.pegarPorGeneroId");
 Route::get("/status", [ColmeiaController::class, "pegarStatus"])->name("ColmeiaController.pegarStatus");
 Route::get("/colmeias", [ColmeiaController::class, "pegarPorUsuarioId"])->name("ColmeiaController.pegarPorUsuarioId");
@@ -31,3 +32,12 @@ Route::post("/colmeia/cadastrar", [ColmeiaController::class, "cadastrar"])->name
 Route::put("/colmeia/editar", [ColmeiaController::class, "editar"])->name("ColmeiaController.editar");
 Route::options("/colmeia/excluir", [ColmeiaController::class, "excluir"])->name("ColmeiaController.excluir");
 // Colmeia
+
+// Doadoras
+Route::get("/doadoras", [DoadoraController::class, "pegarTodos"])->name("DoadoraController.pegarTodos");
+Route::get("/doadora", [DoadoraController::class, "pegarPorId"])->name("DoadoraController.pegarPorId");
+Route::get("/doadora/tipodoacao", [DoadoraController::class, "pegarTipoDoacao"])->name("DoadoraController.pegarTipoDoacao");
+Route::post("/doadora/cadastrar", [DoadoraController::class, "cadastrar"])->name("DoadoraController.cadastrar");
+Route::put("/doadora/editar", [DoadoraController::class, "editar"])->name("DoadoraController.editar");
+Route::options("/doadora/excluir", [DoadoraController::class, "excluir"])->name("DoadoraController.excluir");
+// Doadoras

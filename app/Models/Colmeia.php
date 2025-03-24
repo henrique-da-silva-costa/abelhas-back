@@ -45,6 +45,24 @@ class Colmeia extends Model
         }
     }
 
+    public function pegarColmeiasMatrizesPaginacao($usuario_id)
+    {
+        try {
+            if (!is_numeric($usuario_id)) {
+                return [];
+            }
+
+            $dados = DB::table($this->tabela)
+                ->where("status_id", "=", 2)
+                ->where("usuario_id", "=", $usuario_id)
+                ->paginate(3);
+
+            return $dados;
+        } catch (\Throwable $th) {
+            return [];
+        }
+    }
+
     public function pegarColmeiaMatriz($id)
     {
         try {
