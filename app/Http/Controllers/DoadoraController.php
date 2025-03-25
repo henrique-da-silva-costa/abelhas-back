@@ -22,9 +22,30 @@ class DoadoraController extends Controller
         return response()->json($doadoras);
     }
 
+    public function pegarDoadoraDisco()
+    {
+        $doadoras = $this->doadora->pegarDoadoraDisco();
+
+        return response()->json($doadoras);
+    }
+
+    public function pegarDoadoraCampeira()
+    {
+        $doadoras = $this->doadora->pegarDoadoraCampeira();
+
+        return response()->json($doadoras);
+    }
+
     public function pegarTipoDoacao()
     {
         $doadoras = $this->doadora->pegarTipoDoacao();
+
+        return response()->json($doadoras);
+    }
+
+    public function pegarTipoDivisao()
+    {
+        $doadoras = $this->doadora->pegarTipoDivisao();
 
         return response()->json($doadoras);
     }
@@ -47,6 +68,12 @@ class DoadoraController extends Controller
 
         $inputs = $request->all();
 
+        $existe = $this->doadora->existeDoadora($inputs);
+
+        if ($existe) {
+            return response()->json(["erro" => TRUE, "msg" => "Colmeia já é doadora"]);
+        }
+
         $cadastrar = $this->doadora->cadastrar($inputs);
 
         if ($cadastrar->erro) {
@@ -64,6 +91,12 @@ class DoadoraController extends Controller
         ]);
 
         $inputs = $request->all();
+
+        $existe = $this->doadora->existeDoadora($inputs);
+
+        if ($existe) {
+            return response()->json(["erro" => TRUE, "msg" => "Colmeia já é doadora"]);
+        }
 
         $editar = $this->doadora->editar($inputs);
 

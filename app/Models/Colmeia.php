@@ -10,10 +10,12 @@ use stdClass;
 class Colmeia extends Model
 {
     private $tabela;
+    private $tabelaDoadora;
 
     public function __construct()
     {
         $this->tabela = Tabela::COLMEIA;
+        $this->tabelaDoadora = Tabela::DOADORA;
     }
 
     public function pegarTodos()
@@ -24,6 +26,30 @@ class Colmeia extends Model
             return $dados;
         } catch (\Throwable $th) {
             return [];
+        }
+    }
+
+    public function pegarColmeiasDivisoes($usuario_id)
+    {
+        try {
+            if (!is_numeric($usuario_id)) {
+                return [];
+            }
+            $dados = DB::table($this->tabela)
+                ->where("status_id", "=", 1)
+                ->where("usuario_id", "=", $usuario_id)
+                ->leftJoin("{$this->tabelaDoadora} as doadora1", function ($join) {
+                    $join->on("{$this->tabela}.doadora_id", "=", "doadora1.id");
+                    $join->on("{$this->tabela}.doadora_id2", "=", "doadora2.id");
+                })
+                // ->leftJoin("{$this->tabelaDoadora} as doadora2", function ($join) {
+                //     $join->on("{$this->tabela}.doadora_id2", "=", "doadora2.id");
+                // })
+                ->get();
+
+            return $dados;
+        } catch (\Throwable $th) {
+            return [$th->getMessage()];
         }
     }
 

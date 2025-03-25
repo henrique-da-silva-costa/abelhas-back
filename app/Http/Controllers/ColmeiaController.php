@@ -31,6 +31,16 @@ class ColmeiaController extends Controller
         return response()->json($colmeias);
     }
 
+    public function pegarColmeiasDivisoes(Request $request)
+    {
+
+        $usuario_id = isset($request["usuario_id"]) ? $request["usuario_id"] : NULL;
+
+        $colmeias = $this->colmeia->pegarColmeiasDivisoes($usuario_id);
+
+        return response()->json($colmeias);
+    }
+
     public function pegarColmeiasMatrizes(Request $request)
     {
 
