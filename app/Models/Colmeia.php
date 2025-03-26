@@ -38,14 +38,17 @@ class Colmeia extends Model
             $dados = DB::table($this->tabela)
                 ->where("status_id", "=", 1)
                 ->where("usuario_id", "=", $usuario_id)
-                ->leftJoin("{$this->tabelaDoadora} as doadora1", function ($join) {
-                    $join->on("{$this->tabela}.doadora_id", "=", "doadora1.id");
-                    $join->on("{$this->tabela}.doadora_id2", "=", "doadora2.id");
-                })
-                // ->leftJoin("{$this->tabelaDoadora} as doadora2", function ($join) {
-                //     $join->on("{$this->tabela}.doadora_id2", "=", "doadora2.id");
-                // })
+                ->join($this->tabelaDoadora, "{$this->tabela}.doadora_id", "=", "{$this->tabelaDoadora}.id")
+                // ->rightJoin($this->tabelaDoadora . " as doadora2", "{$this->tabela}.doadora_id2", "=", "doadora2.id")
                 ->get();
+            // $dados = DB::table($this->tabela)
+            //     ->where("status_id", "=", 1)
+            //     ->where("usuario_id", "=", $usuario_id)
+            //     ->leftJoin("{$this->tabelaDoadora}", function ($join) {
+            //         $join->on("{$this->tabela}.doadora_id", "=", "{$this->tabelaDoadora}.id")
+            //             ->orOn("{$this->tabela}.doadora_id2", "=", "{$this->tabelaDoadora}.id");
+            //     })
+            //     ->get();
 
             return $dados;
         } catch (\Throwable $th) {
