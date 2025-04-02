@@ -2,50 +2,35 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Doadora;
+use App\Models\DoadoraDisco;
 use Illuminate\Http\Request;
 
-class DoadoraController extends Controller
+class DoadoraDiscoController extends Controller
 {
-
-    private $doadora;
+    private $doadoraDisco;
 
     public function __construct()
     {
-        $this->doadora = new Doadora;
+        $this->doadoraDisco = new DoadoraDisco;
     }
 
     public function pegarTodos()
     {
-        $doadoras = $this->doadora->pegarTodos();
-
-        return response()->json($doadoras);
-    }
-
-    public function pegarDoadoraDisco()
-    {
-        $doadoras = $this->doadora->pegarDoadoraDisco();
-
-        return response()->json($doadoras);
-    }
-
-    public function pegarDoadoraCampeira()
-    {
-        $doadoras = $this->doadora->pegarDoadoraCampeira();
+        $doadoras = $this->doadoraDisco->pegarTodos();
 
         return response()->json($doadoras);
     }
 
     public function pegarTipoDoacao()
     {
-        $doadoras = $this->doadora->pegarTipoDoacao();
+        $doadoras = $this->doadoraDisco->pegarTipoDoacao();
 
         return response()->json($doadoras);
     }
 
     public function pegarTipoDivisao()
     {
-        $doadoras = $this->doadora->pegarTipoDivisao();
+        $doadoras = $this->doadoraDisco->pegarTipoDivisao();
 
         return response()->json($doadoras);
     }
@@ -54,7 +39,7 @@ class DoadoraController extends Controller
     {
         $id = isset($request["id"]) ? $request["id"] : NULL;
 
-        $doadoras = $this->doadora->pegarPorId($id);
+        $doadoras = $this->doadoraDisco->pegarPorId($id);
 
         return response()->json($doadoras);
     }
@@ -68,13 +53,13 @@ class DoadoraController extends Controller
 
         $inputs = $request->all();
 
-        $existe = $this->doadora->existeDoadora($inputs);
+        $existe = $this->doadoraDisco->existeDoadora($inputs);
 
         if ($existe) {
             return response()->json(["erro" => TRUE, "msg" => "Colmeia já é doadora"]);
         }
 
-        $cadastrar = $this->doadora->cadastrar($inputs);
+        $cadastrar = $this->doadoraDisco->cadastrar($inputs);
 
         if ($cadastrar->erro) {
             return response()->json(["erro" => TRUE, "msg" => $cadastrar->msg]);
@@ -92,13 +77,13 @@ class DoadoraController extends Controller
 
         $inputs = $request->all();
 
-        $existe = $this->doadora->existeDoadora($inputs);
+        $existe = $this->doadoraDisco->existeDoadora($inputs);
 
         if ($existe) {
             return response()->json(["erro" => TRUE, "msg" => "Colmeia já é doadora"]);
         }
 
-        $editar = $this->doadora->editar($inputs);
+        $editar = $this->doadoraDisco->editar($inputs);
 
         if ($editar->erro) {
             return response()->json(["erro" => TRUE, "msg" => $editar->msg]);
@@ -117,7 +102,7 @@ class DoadoraController extends Controller
             return response()->json(["erro" => TRUE, "msg" => "Colmeia não encontrada"]);
         }
 
-        $excluir = $this->doadora->excluir($id);
+        $excluir = $this->doadoraDisco->excluir($id);
 
         if ($excluir->erro) {
             return response()->json(["erro" => TRUE, "msg" => $excluir->msg]);

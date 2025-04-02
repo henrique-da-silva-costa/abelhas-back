@@ -7,15 +7,19 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use stdClass;
 
+use function Laravel\Prompts\select;
+
 class Colmeia extends Model
 {
     private $tabela;
     private $tabelaDoadora;
+    private $tabelaTipoDivisao;
 
     public function __construct()
     {
         $this->tabela = Tabela::COLMEIA;
         $this->tabelaDoadora = Tabela::DOADORA;
+        $this->tabelaTipoDivisao = Tabela::TIPO_DIVISAO;
     }
 
     public function pegarTodos()
@@ -29,26 +33,37 @@ class Colmeia extends Model
         }
     }
 
+    public function pegarTipoDivisao()
+    {
+        try {
+            $dados = DB::table($this->tabelaTipoDivisao)->get();
+
+            return $dados;
+        } catch (\Throwable $th) {
+            return [];
+        }
+    }
+
+
     public function pegarColmeiasDivisoes($usuario_id)
     {
         try {
             if (!is_numeric($usuario_id)) {
                 return [];
             }
-            $dados = DB::table($this->tabela)
+            $dados = DB::table($this->tabelaDoadora)
                 ->where("status_id", "=", 1)
                 ->where("usuario_id", "=", $usuario_id)
-                ->join($this->tabelaDoadora, "{$this->tabela}.doadora_id", "=", "{$this->tabelaDoadora}.id")
-                // ->rightJoin($this->tabelaDoadora . " as doadora2", "{$this->tabela}.doadora_id2", "=", "doadora2.id")
+                ->leftJoin("{$this->tabela}", function ($join) {
+                    $join->on("{$this->tabela}.doadora_id", "=", "{$this->tabelaDoadora}.id")
+                        ->orOn("{$this->tabela}.doadora_id2", "=", "{$this->tabelaDoadora}.id");
+                })
+                ->select([
+                    "{$this->tabela}.*",
+                    "{$this->tabelaDoadora}.*"
+                ])
+                ->distinct("{$this->tabela}.id")
                 ->get();
-            // $dados = DB::table($this->tabela)
-            //     ->where("status_id", "=", 1)
-            //     ->where("usuario_id", "=", $usuario_id)
-            //     ->leftJoin("{$this->tabelaDoadora}", function ($join) {
-            //         $join->on("{$this->tabela}.doadora_id", "=", "{$this->tabelaDoadora}.id")
-            //             ->orOn("{$this->tabela}.doadora_id2", "=", "{$this->tabelaDoadora}.id");
-            //     })
-            //     ->get();
 
             return $dados;
         } catch (\Throwable $th) {

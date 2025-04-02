@@ -6,6 +6,8 @@ class Tabela
 {
     const COLMEIA = "colmeia";
     const DOADORA = "doadora";
+    const DOADORA_DISCO = "doadora_disco";
+    const DOADORA_CAMPEIRA = "doadora_campeira";
     const ESPECIE = "especie";
     const GENERO = "genero";
     const STATUS = "status";

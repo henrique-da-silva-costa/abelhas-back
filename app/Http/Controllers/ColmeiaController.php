@@ -31,6 +31,13 @@ class ColmeiaController extends Controller
         return response()->json($colmeias);
     }
 
+    public function pegarTipoDivisao()
+    {
+        $tipoDivisao = $this->colmeia->pegarTipoDivisao();
+
+        return response()->json($tipoDivisao);
+    }
+
     public function pegarColmeiasDivisoes(Request $request)
     {
 
