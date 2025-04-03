@@ -7,19 +7,21 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use stdClass;
 
-use function Laravel\Prompts\select;
-
 class Colmeia extends Model
 {
     private $tabela;
-    private $tabelaDoadora;
+    private $tabelaDoadoraDisco;
+    private $tabelaDoadoraCampeira;
     private $tabelaTipoDivisao;
+    private $tabelaTipoDoacao;
 
     public function __construct()
     {
         $this->tabela = Tabela::COLMEIA;
-        $this->tabelaDoadora = Tabela::DOADORA;
+        $this->tabelaDoadoraDisco = Tabela::DOADORA_DISCO;
+        $this->tabelaDoadoraCampeira = Tabela::DOADORA_CAMPEIRA;
         $this->tabelaTipoDivisao = Tabela::TIPO_DIVISAO;
+        $this->tabelaTipoDoacao = Tabela::TIPO_DOACAO;
     }
 
     public function pegarTodos()
@@ -44,26 +46,27 @@ class Colmeia extends Model
         }
     }
 
-
     public function pegarColmeiasDivisoes($usuario_id)
     {
         try {
             if (!is_numeric($usuario_id)) {
                 return [];
             }
-            $dados = DB::table($this->tabelaDoadora)
-                ->where("status_id", "=", 1)
-                ->where("usuario_id", "=", $usuario_id)
-                ->leftJoin("{$this->tabela}", function ($join) {
-                    $join->on("{$this->tabela}.doadora_id", "=", "{$this->tabelaDoadora}.id")
-                        ->orOn("{$this->tabela}.doadora_id2", "=", "{$this->tabelaDoadora}.id");
-                })
+            $dados = DB::table($this->tabela . ' as tabela_colmeia')
+                ->where("tabela_colmeia.status_id", "=", 1)
+                ->where("tabela_colmeia.usuario_id", "=", $usuario_id)
+                ->leftJoin("{$this->tabelaDoadoraDisco} as dd", "tabela_colmeia.doadora_disco_id", "=", "dd.id")
+                ->leftJoin("{$this->tabelaDoadoraCampeira} as dc", "tabela_colmeia.doadora_campeira_id", "=", "dc.id")
+                ->rightJoin("{$this->tabela} as tabela_colmeia_disco", "tabela_colmeia_disco.id", "=", "dd.colmeia_id")
+                ->rightJoin("{$this->tabela} as tabela_colmeia_campeira", "tabela_colmeia_campeira.id", "=", "dc.colmeia_id")
+                ->distinct()
                 ->select([
-                    "{$this->tabela}.*",
-                    "{$this->tabelaDoadora}.*"
+                    "tabela_colmeia.nome",
+                    "tabela_colmeia.data_criacao",
+                    "tabela_colmeia_disco.nome AS doadora_disco_nome",
+                    "tabela_colmeia_campeira.nome AS doadora_campeira_nome",
                 ])
-                ->distinct("{$this->tabela}.id")
-                ->get();
+                ->paginate(2);
 
             return $dados;
         } catch (\Throwable $th) {
@@ -168,9 +171,9 @@ class Colmeia extends Model
             $genero_id = isset($dados["genero_id"]) ? $dados["genero_id"] : NULL;
             $especie_id = isset($dados["especie_id"]) ? $dados["especie_id"] : NULL;
             $status_id = isset($dados["status_id"]) ? $dados["status_id"] : NULL;
-            $doadora_id = isset($dados["doadora_id"]) ? $dados["doadora_id"] : NULL;
+            $doadora_disco_id = isset($dados["doadora_disco_id"]) ? $dados["doadora_disco_id"] : NULL;
             $tipo_divisao_id = isset($dados["tipo_divisao_id"]) ? $dados["tipo_divisao_id"] : NULL;
-            $doadora_id2 = isset($dados["doadora_id2"]) ? $dados["doadora_id2"] : NULL;
+            $doadora_campeira_id = isset($dados["doadora_campeira_id"]) ? $dados["doadora_campeira_id"] : NULL;
             $usuario_id = isset($dados["usuario_id"]) ? $dados["usuario_id"] : NULL;
 
             DB::table($this->tabela)->insert([
@@ -181,9 +184,9 @@ class Colmeia extends Model
                 "genero_id" => $genero_id,
                 "especie_id" => $especie_id,
                 "status_id" => $status_id,
-                "doadora_id" => $doadora_id,
+                "doadora_disco_id" => $doadora_disco_id,
                 "tipo_divisao_id" => $tipo_divisao_id,
-                "doadora_id2" => $doadora_id2,
+                "doadora_campeira_id" => $doadora_campeira_id,
                 "usuario_id" => $usuario_id,
             ]);
 
@@ -212,9 +215,9 @@ class Colmeia extends Model
             $genero_id = isset($dados["genero_id"]) ? $dados["genero_id"] : NULL;
             $especie_id = isset($dados["especie_id"]) ? $dados["especie_id"] : NULL;
             $status_id = isset($dados["status_id"]) ? $dados["status_id"] : NULL;
-            $doadora_id = isset($dados["doadora_id"]) ? $dados["doadora_id"] : NULL;
+            $doadora_disco_id = isset($dados["doadora_disco_id"]) ? $dados["doadora_disco_id"] : NULL;
             $tipo_divisao_id = isset($dados["tipo_divisao_id"]) ? $dados["tipo_divisao_id"] : NULL;
-            $doadora_id2 = isset($dados["doadora_id2"]) ? $dados["doadora_id2"] : NULL;
+            $doadora_campeira_id = isset($dados["doadora_campeira_id"]) ? $dados["doadora_campeira_id"] : NULL;
             $usuario_id = isset($dados["usuario_id"]) ? $dados["usuario_id"] : NULL;
 
             DB::table($this->tabela)->where("id", "=", $id)->update([
@@ -225,9 +228,9 @@ class Colmeia extends Model
                 "genero_id" => $genero_id,
                 "especie_id" => $especie_id,
                 "status_id" => $status_id,
-                "doadora_id" => $doadora_id,
+                "doadora_disco_id" => $doadora_disco_id,
                 "tipo_divisao_id" => $tipo_divisao_id,
-                "doadora_id2" => $doadora_id2,
+                "doadora_campeira_id" => $doadora_campeira_id,
                 "usuario_id" => $usuario_id,
             ]);
 

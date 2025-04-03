@@ -174,7 +174,6 @@ class ColmeiaController extends Controller
             }
         }
 
-
         $editar = $this->colmeia->editar($inputs);
 
         if ($editar->erro) {
