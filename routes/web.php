@@ -40,6 +40,7 @@ Route::options("/colmeia/excluir", [ColmeiaController::class, "excluir"])->name(
 
 // Doadoras
 Route::get("/doadoras/disco", [DoadoraDiscoController::class, "pegarTodos"])->name("DoadoraDiscoController.pegarTodos");
+Route::get("/doadoras/disco/select", [DoadoraDiscoController::class, "pegarTodosSelect"])->name("DoadoraDiscoController.pegarTodosSelect");
 Route::get("/doadora/disco", [DoadoraDiscoController::class, "pegarPorId"])->name("DoadoraDiscoController.pegarPorId");
 Route::get("/doadora/tipodoacao/disco", [DoadoraDiscoController::class, "pegarTipoDoacao"])->name("DoadoraDiscoController.pegarTipoDoacao");
 Route::post("/doadora/cadastrar/disco", [DoadoraDiscoController::class, "cadastrar"])->name("DoadoraDiscoController.cadastrar");
@@ -47,6 +48,7 @@ Route::put("/doadora/editar/disco", [DoadoraDiscoController::class, "editar"])->
 Route::options("/doadora/excluir/disco", [DoadoraDiscoController::class, "excluir"])->name("DoadoraDiscoController.excluir");
 
 Route::get("/doadoras/campeira", [DoadoraCampeiraController::class, "pegarTodos"])->name("DoadoraCampeiraController.pegarTodos");
+Route::get("/doadoras/campeira/select", [DoadoraCampeiraController::class, "pegarTodosSelect"])->name("DoadoraCampeiraController.pegarTodosSelect");
 Route::get("/doadora/campeira", [DoadoraCampeiraController::class, "pegarPorId"])->name("DoadoraCampeiraController.pegarPorId");
 Route::get("/doadora/tipodoacao/campeira", [DoadoraCampeiraController::class, "pegarTipoDoacao"])->name("DoadoraCampeiraController.pegarTipoDoacao");
 Route::post("/doadora/cadastrar/campeira", [DoadoraCampeiraController::class, "cadastrar"])->name("DoadoraCampeiraController.cadastrar");

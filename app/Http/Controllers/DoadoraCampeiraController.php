@@ -14,9 +14,22 @@ class DoadoraCampeiraController extends Controller
         $this->doadoraCampeira = new DoadoraCampeira;
     }
 
-    public function pegarTodos()
+    public function pegarTodos(Request $request)
     {
-        $doadoras = $this->doadoraCampeira->pegarTodos();
+        $inputs = $request->all();
+
+        $usuario_id = isset($inputs["usuario_id"]) ? $inputs["usuario_id"] : NULL;
+        $doadoras = $this->doadoraCampeira->pegarTodos($usuario_id);
+
+        return response()->json($doadoras);
+    }
+
+    public function pegarTodosSelect(Request $request)
+    {
+        $inputs = $request->all();
+
+        $usuario_id = isset($inputs["usuario_id"]) ? $inputs["usuario_id"] : NULL;
+        $doadoras = $this->doadoraCampeira->pegarTodosSelect($usuario_id);
 
         return response()->json($doadoras);
     }
