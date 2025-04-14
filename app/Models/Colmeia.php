@@ -135,7 +135,20 @@ class Colmeia extends Model
     public function pegarPorId($id)
     {
         try {
-            $dados = DB::table($this->tabela)->where("id", "=", $id)->first();
+            $dados = DB::table($this->tabela)->where("id", "=", $id)->first(
+                [
+                    "id",
+                    "nome",
+                    "data_criacao",
+                    "especie_id",
+                    "genero_id",
+                    "status_id",
+                    "doadora_campeira_id",
+                    "doadora_disco_id",
+                    "tipo_divisao_id",
+                    "usuario_id"
+                ]
+            );
             return $dados;
         } catch (\Throwable $th) {
             return NULL;
@@ -149,7 +162,7 @@ class Colmeia extends Model
                 return [];
             }
 
-            $dados = DB::table($this->tabela)->where("usuario_id", "=", $usuario_id)->orderBy("id", "desc")->paginate(4);
+            $dados = DB::table($this->tabela)->where("usuario_id", "=", $usuario_id)->orderBy("id", "desc")->paginate(5);
 
             return $dados;
         } catch (\Throwable $th) {
