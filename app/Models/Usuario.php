@@ -102,6 +102,7 @@ class Usuario extends Model
 
             return FALSE;
         } catch (\Throwable $th) {
+            print_r($th->getMessage());
             return NULL;
         }
     }

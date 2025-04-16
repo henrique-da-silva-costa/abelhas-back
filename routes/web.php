@@ -18,7 +18,7 @@ Route::get("/token", function () {
 Route::post("/login", [UsuarioController::class, "login"])->name("UsuarioController.login");
 Route::post("/verificaremail", [UsuarioController::class, "verificarEmail"])->name("UsuarioController.verificarEmail");
 Route::get("/verificaremailapp", [UsuarioController::class, "verificarEmailApp"])->name("UsuarioController.verificarEmailApp");
-Route::post("/recuperarsenha", [UsuarioController::class, "recuperarSenhaApp"])->name("UsuarioController.recuperarSenhaApp");
+Route::post("/recuperarsenha", [UsuarioController::class, "recuperarSenha"])->name("UsuarioController.recuperarSenha");
 Route::post("/usuario/cadastrar", [UsuarioController::class, "cadastrar"])->name("UsuarioController.cadastrar");
 //usuario
 

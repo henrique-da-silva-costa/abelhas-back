@@ -40,7 +40,7 @@ class UsuarioController extends Controller
 
         $existeEmail = $this->usuario->existeEmail($inputs);
 
-        if ($existeEmail) {
+        if (!$existeEmail) {
             return response()->json(["erro" => TRUE, "msg" => "E-mail não encontrado!"]);
         }
 
@@ -109,7 +109,7 @@ class UsuarioController extends Controller
 
         $existeEmail = $this->usuario->existeEmail($inputs);
 
-        if ($existeEmail) {
+        if (!$existeEmail) {
             return response()->json(["erro" => TRUE, "msg" => "E-mail não encontrado"]);
         }
 
