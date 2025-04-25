@@ -155,18 +155,19 @@ class Colmeia extends Model
         }
     }
 
-    public function pegarPorUsuarioId($usuario_id)
+    public function pegarPorUsuarioId($usuario_id, $filtro)
     {
         try {
             if (!is_numeric($usuario_id)) {
                 return [];
             }
 
-            $dados = DB::table($this->tabela)->where("usuario_id", "=", $usuario_id)->orderBy("id", "desc")->paginate(5);
+            $dados = DB::table($this->tabela)->where("usuario_id", "=", $usuario_id)->where("{$this->tabela}.nome", "like", "%" . $filtro . "%")->orderBy("id", "desc")->paginate(5);
 
             return $dados;
         } catch (\Throwable $th) {
-            return [];
+            return $th->getMessage();
+            // return [];
         }
     }
 

@@ -100,9 +100,12 @@ class ColmeiaController extends Controller
 
     public function pegarPorUsuarioId(Request $request)
     {
-        $usuario_id = isset($request["usuario_id"]) ? $request["usuario_id"] : NULL;
+        $inputs = $request->all();
 
-        $colmeias = $this->colmeia->pegarPorUsuarioId($usuario_id);
+        $usuario_id = isset($request["usuario_id"]) ? $request["usuario_id"] : NULL;
+        $filtro = isset($request["filtro"]) ? $request["filtro"] : NULL;
+
+        $colmeias = $this->colmeia->pegarPorUsuarioId($usuario_id, $filtro);
 
         return response()->json($colmeias);
     }
