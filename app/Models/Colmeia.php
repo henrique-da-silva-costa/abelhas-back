@@ -155,19 +155,33 @@ class Colmeia extends Model
         }
     }
 
-    public function pegarPorUsuarioId($usuario_id, $filtro)
+    public function pegarPorUsuarioId($usuario_id, $filtros)
     {
         try {
             if (!is_numeric($usuario_id)) {
                 return [];
             }
 
-            $dados = DB::table($this->tabela)->where("usuario_id", "=", $usuario_id)->where("{$this->tabela}.nome", "like", "%" . $filtro . "%")->orderBy("id", "desc")->paginate(5);
+            $nome = isset($filtros["nome"]) ? $filtros["nome"] : NULL;
+            $status = isset($filtros["status"]) ? $filtros["status"] : NULL;
+            $genero = isset($filtros["genero"]) ? $filtros["genero"] : NULL;
+
+            $sql = DB::table($this->tabela)->where("usuario_id", "=", $usuario_id);
+            if ($nome) {
+                $sql->where("{$this->tabela}.nome", "like", "%" . $nome . "%");
+            }
+            if ($status) {
+                $sql->where("{$this->tabela}.status_id", "=", $status);
+            }
+            if ($genero) {
+                $sql->where("{$this->tabela}.genero_id", "=", $genero);
+            }
+            $sql->orderBy("id", "desc");
+            $dados = $sql->paginate(5);
 
             return $dados;
         } catch (\Throwable $th) {
-            return $th->getMessage();
-            // return [];
+            return [];
         }
     }
 

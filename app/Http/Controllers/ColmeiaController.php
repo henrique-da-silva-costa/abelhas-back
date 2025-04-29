@@ -101,11 +101,10 @@ class ColmeiaController extends Controller
     public function pegarPorUsuarioId(Request $request)
     {
         $inputs = $request->all();
+        $usuario_id = isset($inputs["usuario_id"]) ? $inputs["usuario_id"] : NULL;
+        $filtros = isset($inputs["filtros"]) ? $inputs["filtros"] : NULL;
 
-        $usuario_id = isset($request["usuario_id"]) ? $request["usuario_id"] : NULL;
-        $filtro = isset($request["filtro"]) ? $request["filtro"] : NULL;
-
-        $colmeias = $this->colmeia->pegarPorUsuarioId($usuario_id, $filtro);
+        $colmeias = $this->colmeia->pegarPorUsuarioId($usuario_id, $filtros);
 
         return response()->json($colmeias);
     }
@@ -121,6 +120,9 @@ class ColmeiaController extends Controller
 
     public function cadastrar(Request $request)
     {
+
+        print_r($_FILES["img"]);
+
         $request->validate([
             "nome" => "required",
             "data_criacao" => "required",
