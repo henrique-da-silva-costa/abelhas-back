@@ -139,6 +139,8 @@ class Colmeia extends Model
                 [
                     "id",
                     "nome",
+                    "img",
+                    "img_caminho",
                     "data_criacao",
                     "especie_id",
                     "genero_id",
@@ -200,8 +202,9 @@ class Colmeia extends Model
             $especie_id = isset($dados["especie_id"]) ? $dados["especie_id"] : NULL;
             $status_id = isset($dados["status_id"]) ? $dados["status_id"] : NULL;
             $doadora_disco_id = isset($dados["doadora_disco_id"]) ? $dados["doadora_disco_id"] : NULL;
-            $tipo_divisao_id = isset($dados["tipo_divisao_id"]) ? $dados["tipo_divisao_id"] : NULL;
             $doadora_campeira_id = isset($dados["doadora_campeira_id"]) ? $dados["doadora_campeira_id"] : NULL;
+            $img = isset($dados["img"]) ? $dados["img"] : NULL;
+            $img_caminho = isset($dados["img_caminho"]) ? $dados["img_caminho"] : NULL;
             $usuario_id = isset($dados["usuario_id"]) ? $dados["usuario_id"] : NULL;
 
             DB::table($this->tabela)->insert([
@@ -213,9 +216,10 @@ class Colmeia extends Model
                 "especie_id" => $especie_id,
                 "status_id" => $status_id,
                 "doadora_disco_id" => $doadora_disco_id,
-                "tipo_divisao_id" => $tipo_divisao_id,
                 "doadora_campeira_id" => $doadora_campeira_id,
-                "usuario_id" => $usuario_id,
+                "img" => $img,
+                "img_caminho" => $img_caminho,
+                "usuario_id" => $usuario_id
             ]);
 
             return $retorno;
@@ -244,8 +248,9 @@ class Colmeia extends Model
             $especie_id = isset($dados["especie_id"]) ? $dados["especie_id"] : NULL;
             $status_id = isset($dados["status_id"]) ? $dados["status_id"] : NULL;
             $doadora_disco_id = isset($dados["doadora_disco_id"]) ? $dados["doadora_disco_id"] : NULL;
-            $tipo_divisao_id = isset($dados["tipo_divisao_id"]) ? $dados["tipo_divisao_id"] : NULL;
             $doadora_campeira_id = isset($dados["doadora_campeira_id"]) ? $dados["doadora_campeira_id"] : NULL;
+            $img = isset($dados["img"]) ? $dados["img"] : NULL;
+            $img_caminho = isset($dados["img_caminho"]) ? $dados["img_caminho"] : NULL;
             $usuario_id = isset($dados["usuario_id"]) ? $dados["usuario_id"] : NULL;
 
             DB::table($this->tabela)->where("id", "=", $id)->update([
@@ -257,8 +262,9 @@ class Colmeia extends Model
                 "especie_id" => $especie_id,
                 "status_id" => $status_id,
                 "doadora_disco_id" => $doadora_disco_id,
-                "tipo_divisao_id" => $tipo_divisao_id,
                 "doadora_campeira_id" => $doadora_campeira_id,
+                "img" => $img,
+                "img_caminho" => $img_caminho,
                 "usuario_id" => $usuario_id,
             ]);
 

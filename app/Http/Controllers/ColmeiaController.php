@@ -40,7 +40,6 @@ class ColmeiaController extends Controller
 
     public function pegarColmeiasDivisoes(Request $request)
     {
-
         $usuario_id = isset($request["usuario_id"]) ? $request["usuario_id"] : NULL;
 
         $colmeias = $this->colmeia->pegarColmeiasDivisoes($usuario_id);
@@ -50,7 +49,6 @@ class ColmeiaController extends Controller
 
     public function pegarColmeiasMatrizes(Request $request)
     {
-
         $usuario_id = isset($request["usuario_id"]) ? $request["usuario_id"] : NULL;
 
         $colmeias = $this->colmeia->pegarColmeiasMatrizes($usuario_id);
@@ -60,7 +58,6 @@ class ColmeiaController extends Controller
 
     public function pegarColmeiasMatrizesPaginacao(Request $request)
     {
-
         $usuario_id = isset($request["usuario_id"]) ? $request["usuario_id"] : NULL;
 
         $colmeias = $this->colmeia->pegarColmeiasMatrizesPaginacao($usuario_id);
@@ -120,9 +117,6 @@ class ColmeiaController extends Controller
 
     public function cadastrar(Request $request)
     {
-
-        print_r($_FILES["img"]);
-
         $request->validate([
             "nome" => "required",
             "data_criacao" => "required",
@@ -130,9 +124,15 @@ class ColmeiaController extends Controller
             "especie_id" => "required",
             "status_id" => "required",
             "usuario_id" => "required",
+            "img" => "image|mimes:jpeg,png,jpg,gif|max:2048",
         ]);
 
         $inputs = $request->all();
+
+        $imgCaminho = $request->file('img')->store('imagens', 'public');
+
+        $inputs["img"] = "http://" . $_SERVER["HTTP_HOST"] . "/" . "storage" . "/" . $imgCaminho;
+        $inputs["img_caminho"] = $imgCaminho;
 
         $cadastrar = $this->colmeia->cadastrar($inputs);
 
@@ -145,6 +145,8 @@ class ColmeiaController extends Controller
 
     public function editar(Request $request)
     {
+        print_r($request->all());
+
         $request->validate([
             "nome" => "required",
             "data_criacao" => "required",
@@ -152,9 +154,15 @@ class ColmeiaController extends Controller
             "especie_id" => "required",
             "status_id" => "required",
             "usuario_id" => "required",
+            "img" => "image|mimes:jpeg,png,jpg,gif|max:2048",
         ]);
 
         $inputs = $request->all();
+
+        $imgCaminho = $request->file('img')->store('imagens', 'public');
+
+        $inputs["img"] = "http://" . $_SERVER["HTTP_HOST"] . "/" . "storage" . "/" . $imgCaminho;
+        $inputs["img_caminho"] = $imgCaminho;
 
         $id = isset($inputs["id"]) ? $inputs["id"] : NULL;
         $status_id = isset($inputs["status_id"]) ? $inputs["status_id"] : NULL;
