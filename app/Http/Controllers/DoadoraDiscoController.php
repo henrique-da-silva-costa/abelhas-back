@@ -17,9 +17,10 @@ class DoadoraDiscoController extends Controller
     public function pegarTodos(Request $request)
     {
         $inputs = $request->all();
-
         $usuario_id = isset($inputs["usuario_id"]) ? $inputs["usuario_id"] : NULL;
-        $doadoras = $this->doadoraDisco->pegarTodos($usuario_id);
+        $filtros = isset($inputs["filtros"]) ? $inputs["filtros"] : NULL;
+
+        $doadoras = $this->doadoraDisco->pegarTodos($usuario_id, $filtros);
 
         return response()->json($doadoras);
     }
@@ -27,8 +28,8 @@ class DoadoraDiscoController extends Controller
     public function pegarTodosSelect(Request $request)
     {
         $inputs = $request->all();
-
         $usuario_id = isset($inputs["usuario_id"]) ? $inputs["usuario_id"] : NULL;
+
         $doadoras = $this->doadoraDisco->pegarTodosSelect($usuario_id);
 
         return response()->json($doadoras);

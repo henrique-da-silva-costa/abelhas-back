@@ -17,9 +17,10 @@ class DoadoraCampeiraController extends Controller
     public function pegarTodos(Request $request)
     {
         $inputs = $request->all();
-
         $usuario_id = isset($inputs["usuario_id"]) ? $inputs["usuario_id"] : NULL;
-        $doadoras = $this->doadoraCampeira->pegarTodos($usuario_id);
+        $filtros = isset($inputs["filtros"]) ? $inputs["filtros"] : NULL;
+
+        $doadoras = $this->doadoraCampeira->pegarTodos($usuario_id, $filtros);
 
         return response()->json($doadoras);
     }

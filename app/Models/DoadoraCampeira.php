@@ -22,26 +22,32 @@ class DoadoraCampeira extends Model
         $this->tabelaTipoDivisao = Tabela::TIPO_DIVISAO;
     }
 
-    public function pegarTodos($usuario_id)
+    public function pegarTodos($usuario_id, $filtros)
     {
         try {
             if (!is_numeric($usuario_id)) {
                 return [];
             }
 
-            $dados = DB::table($this->tabela)
-                ->where("usuario_id", "=", $usuario_id)
-                ->leftJoin($this->tabelaColmeia, "{$this->tabela}.colmeia_id", "=", "{$this->tabelaColmeia}.id")
-                ->leftJoin($this->tabelaTipoDoacao, "{$this->tabela}.tipo_doacao_id", "=", "{$this->tabelaTipoDoacao}.id")->select([
-                    "{$this->tabela}.*",
-                    "{$this->tabelaColmeia}.nome AS colmeia_nome",
-                    "{$this->tabelaTipoDoacao}.tipo AS tipo_doacao_tipo"
-                ])
-                ->paginate(3);
+            $nome = isset($filtros["nome"]) ? $filtros["nome"] : NULL;
+
+            $sql = DB::table($this->tabela);
+            $sql->where("usuario_id", "=", $usuario_id);
+            $sql->where("{$this->tabelaColmeia}.usuario_id", "=", $usuario_id);
+            if ($nome) {
+                $sql->where("{$this->tabelaColmeia}.nome", "like", "%" . $nome . "%");
+            }
+            $sql->leftJoin($this->tabelaColmeia, "{$this->tabela}.colmeia_id", "=", "{$this->tabelaColmeia}.id");
+            $sql->leftJoin($this->tabelaTipoDoacao, "{$this->tabela}.tipo_doacao_id", "=", "{$this->tabelaTipoDoacao}.id")->select([
+                "{$this->tabela}.*",
+                "{$this->tabelaColmeia}.nome AS colmeia_nome",
+                "{$this->tabelaTipoDoacao}.tipo AS tipo_doacao_tipo"
+            ]);
+            $dados = $sql->paginate(3);
 
             return $dados;
         } catch (\Throwable $th) {
-            return [];
+            return [$th->getMessage()];
         }
     }
 
@@ -67,44 +73,6 @@ class DoadoraCampeira extends Model
             return [];
         }
     }
-
-    // public function pegarDoadoraDisco()
-    // {
-    //     try {
-    //         $dados = DB::table($this->tabela)
-    //             ->where("tipo_doacao_id", "=", 1)
-    //             ->leftJoin($this->tabelaColmeia, "{$this->tabela}.colmeia_id", "=", "{$this->tabelaColmeia}.id")
-    //             ->leftJoin($this->tabelaTipoDoacao, "{$this->tabela}.tipo_doacao_id", "=", "{$this->tabelaTipoDoacao}.id")->select([
-    //                 "{$this->tabela}.*",
-    //                 "{$this->tabelaColmeia}.nome AS colmeia_nome",
-    //                 "{$this->tabelaTipoDoacao}.tipo AS tipo_doacao_tipo"
-    //             ])
-    //             ->get();
-
-    //         return $dados;
-    //     } catch (\Throwable $th) {
-    //         return [];
-    //     }
-    // }
-
-    // public function pegarDoadoraCampeira()
-    // {
-    //     try {
-    //         $dados = DB::table($this->tabela)
-    //             ->where("tipo_doacao_id", "=", 2)
-    //             ->leftJoin($this->tabelaColmeia, "{$this->tabela}.colmeia_id", "=", "{$this->tabelaColmeia}.id")
-    //             ->leftJoin($this->tabelaTipoDoacao, "{$this->tabela}.tipo_doacao_id", "=", "{$this->tabelaTipoDoacao}.id")->select([
-    //                 "{$this->tabela}.*",
-    //                 "{$this->tabelaColmeia}.nome AS colmeia_nome",
-    //                 "{$this->tabelaTipoDoacao}.tipo AS tipo_doacao_tipo"
-    //             ])
-    //             ->get();
-
-    //         return $dados;
-    //     } catch (\Throwable $th) {
-    //         return [];
-    //     }
-    // }
 
     public function pegarTipoDoacao()
     {

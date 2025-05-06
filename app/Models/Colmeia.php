@@ -46,27 +46,33 @@ class Colmeia extends Model
         }
     }
 
-    public function pegarColmeiasDivisoes($usuario_id)
+    public function pegarColmeiasDivisoes($usuario_id, $filtros)
     {
         try {
             if (!is_numeric($usuario_id)) {
                 return [];
             }
-            $dados = DB::table($this->tabela . ' as tabela_colmeia')
-                ->where("tabela_colmeia.status_id", "=", 1)
-                ->where("tabela_colmeia.usuario_id", "=", $usuario_id)
-                ->leftJoin("{$this->tabelaDoadoraDisco} as dd", "tabela_colmeia.doadora_disco_id", "=", "dd.id")
-                ->leftJoin("{$this->tabelaDoadoraCampeira} as dc", "tabela_colmeia.doadora_campeira_id", "=", "dc.id")
-                ->rightJoin("{$this->tabela} as tabela_colmeia_disco", "tabela_colmeia_disco.id", "=", "dd.colmeia_id")
-                ->rightJoin("{$this->tabela} as tabela_colmeia_campeira", "tabela_colmeia_campeira.id", "=", "dc.colmeia_id")
-                ->distinct()
-                ->select([
-                    "tabela_colmeia.nome",
-                    "tabela_colmeia.data_criacao",
-                    "tabela_colmeia_disco.nome AS doadora_disco_nome",
-                    "tabela_colmeia_campeira.nome AS doadora_campeira_nome",
-                ])
-                ->paginate(2);
+
+            $nome = isset($filtros["nome"]) ? $filtros["nome"] : NULL;
+
+            $sql = DB::table($this->tabela . ' as tabela_colmeia');
+            $sql->where("tabela_colmeia.status_id", "=", 1);
+            $sql->where("tabela_colmeia.usuario_id", "=", $usuario_id);
+            if ($nome) {
+                $sql->where("tabela_colmeia.nome", "like", "%" . $nome . "%");
+            }
+            $sql->leftJoin("{$this->tabelaDoadoraDisco} as dd", "tabela_colmeia.doadora_disco_id", "=", "dd.id");
+            $sql->leftJoin("{$this->tabelaDoadoraCampeira} as dc", "tabela_colmeia.doadora_campeira_id", "=", "dc.id");
+            $sql->rightJoin("{$this->tabela} as tabela_colmeia_disco", "tabela_colmeia_disco.id", "=", "dd.colmeia_id");
+            $sql->rightJoin("{$this->tabela} as tabela_colmeia_campeira", "tabela_colmeia_campeira.id", "=", "dc.colmeia_id");
+            $sql->distinct();
+            $sql->select([
+                "tabela_colmeia.nome",
+                "tabela_colmeia.data_criacao",
+                "tabela_colmeia_disco.nome AS doadora_disco_nome",
+                "tabela_colmeia_campeira.nome AS doadora_campeira_nome",
+            ]);
+            $dados = $sql->paginate(2);
 
             return $dados;
         } catch (\Throwable $th) {
@@ -195,6 +201,7 @@ class Colmeia extends Model
             $retorno->erro = FALSE;
 
             $nome = isset($dados["nome"]) ? $dados["nome"] : NULL;
+            $descricao = isset($dados["descricao"]) ? $dados["descricao"] : NULL;
             $data_criacao = isset($dados["data_criacao"]) ? $dados["data_criacao"] : NULL;
             $data_alteracao = isset($dados["data_alteracao"]) ? $dados["data_alteracao"] : NULL;
             $data_divisao = isset($dados["data_divisao"]) ? $dados["data_divisao"] : NULL;
@@ -209,6 +216,7 @@ class Colmeia extends Model
 
             DB::table($this->tabela)->insert([
                 "nome" => $nome,
+                "descricao" => $descricao,
                 "data_criacao" => $data_criacao,
                 "data_alteracao" => $data_alteracao,
                 "data_divisao" => $data_divisao,
@@ -241,6 +249,7 @@ class Colmeia extends Model
 
             $id = isset($dados["id"]) ? $dados["id"] : NULL;
             $nome = isset($dados["nome"]) ? $dados["nome"] : NULL;
+            $descricao = isset($dados["descricao"]) ? $dados["descricao"] : NULL;
             $data_criacao = isset($dados["data_criacao"]) ? $dados["data_criacao"] : NULL;
             $data_alteracao = isset($dados["data_alteracao"]) ? $dados["data_alteracao"] : NULL;
             $data_divisao = isset($dados["data_divisao"]) ? $dados["data_divisao"] : NULL;
@@ -255,6 +264,7 @@ class Colmeia extends Model
 
             DB::table($this->tabela)->where("id", "=", $id)->update([
                 "nome" => $nome,
+                "descricao" => $descricao,
                 "data_criacao" => $data_criacao,
                 "data_alteracao" => $data_alteracao,
                 "data_divisao" => $data_divisao,

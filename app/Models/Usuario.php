@@ -25,11 +25,13 @@ class Usuario extends Model
             $retorno->erro = FALSE;
 
             $nome = isset($dados["nome"]) ? $dados["nome"] : NULL;
+            $img = isset($dados["img"]) ? $dados["img"] : NULL;
             $email = isset($dados["email"]) ? $dados["email"] : NULL;
             $senha = isset($dados["senha"]) ? $dados["senha"] : NULL;
 
             DB::table($this->tabela)->insert([
                 "nome" => $nome,
+                "img" => $img,
                 "email" => $email,
                 "senha" => Hash::make($senha)
             ]);

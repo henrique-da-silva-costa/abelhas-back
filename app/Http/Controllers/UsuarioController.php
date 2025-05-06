@@ -29,7 +29,7 @@ class UsuarioController extends Controller
             return response()->json(["erro" => TRUE, "msg" => "E-mail ou senha incorreto"]);
         }
 
-        return response()->json(["erro" => FALSE, "usuario" => ["id" => $usuario->id, "email" => $usuario->email, "nome" => $usuario->nome]]);
+        return response()->json(["erro" => FALSE, "usuario" => ["id" => $usuario->id, "email" => $usuario->email, "nome" => $usuario->nome, "img" => $usuario->img]]);
     }
 
     public function verificarEmail(Request $request)
@@ -67,10 +67,16 @@ class UsuarioController extends Controller
         $request->validate([
             "nome" => "required",
             "email" => "required",
-            "senha" => "required"
+            "senha" => "required",
+            "img" => "image|mimes:jpeg,png,jpg,gif|max:2048"
         ]);
 
         $inputs = $request->all();
+
+        $imgCaminho = $request->file('img')->store('imagens', 'public');
+
+        $inputs["img"] = "http://" . $_SERVER["HTTP_HOST"] . "/" . "storage" . "/" . $imgCaminho;
+        $inputs["img_caminho"] = $imgCaminho;
 
         $existeEmail = $this->usuario->existeEmail($inputs);
 
