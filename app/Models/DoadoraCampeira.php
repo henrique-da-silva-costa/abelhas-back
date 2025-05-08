@@ -64,6 +64,7 @@ class DoadoraCampeira extends Model
                 ->leftJoin($this->tabelaTipoDoacao, "{$this->tabela}.tipo_doacao_id", "=", "{$this->tabelaTipoDoacao}.id")->select([
                     "{$this->tabela}.*",
                     "{$this->tabelaColmeia}.nome AS colmeia_nome",
+                    "{$this->tabelaColmeia}.genero_id AS colmeia_genero_id",
                     "{$this->tabelaTipoDoacao}.tipo AS tipo_doacao_tipo"
                 ])
                 ->get();

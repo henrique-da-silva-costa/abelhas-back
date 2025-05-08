@@ -30,6 +30,8 @@ class DoadoraDiscoController extends Controller
         $inputs = $request->all();
         $usuario_id = isset($inputs["usuario_id"]) ? $inputs["usuario_id"] : NULL;
 
+        // print_r($inputs);
+
         $doadoras = $this->doadoraDisco->pegarTodosSelect($usuario_id);
 
         return response()->json($doadoras);
