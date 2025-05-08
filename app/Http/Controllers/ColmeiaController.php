@@ -121,7 +121,6 @@ class ColmeiaController extends Controller
     {
         $request->validate([
             "nome" => "required",
-            "data_criacao" => "required",
             "genero_id" => "required",
             "especie_id" => "required",
             "status_id" => "required",

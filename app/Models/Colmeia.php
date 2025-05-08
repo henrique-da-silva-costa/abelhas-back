@@ -145,9 +145,9 @@ class Colmeia extends Model
                 [
                     "id",
                     "nome",
+                    "descricao",
                     "img",
                     "img_caminho",
-                    "data_criacao",
                     "especie_id",
                     "genero_id",
                     "status_id",
@@ -185,7 +185,7 @@ class Colmeia extends Model
                 $sql->where("{$this->tabela}.genero_id", "=", $genero);
             }
             $sql->orderBy("id", "desc");
-            $dados = $sql->paginate(5);
+            $dados = $sql->paginate(4);
 
             return $dados;
         } catch (\Throwable $th) {
@@ -217,7 +217,6 @@ class Colmeia extends Model
             DB::table($this->tabela)->insert([
                 "nome" => $nome,
                 "descricao" => $descricao,
-                "data_criacao" => $data_criacao,
                 "data_alteracao" => $data_alteracao,
                 "data_divisao" => $data_divisao,
                 "genero_id" => $genero_id,
