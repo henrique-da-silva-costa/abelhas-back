@@ -52,16 +52,16 @@ class DoadoraDisco extends Model
         }
     }
 
-    public function pegarTodosSelect($usuario_id)
+    public function pegarTodosSelect($usuario_id, $especie_id)
     {
         try {
-
             if (!is_numeric($usuario_id)) {
                 return [];
             }
 
             $dados = DB::table($this->tabela)
                 ->where("usuario_id", "=", $usuario_id)
+                ->where("{$this->tabelaColmeia}.especie_id", "=", $especie_id)
                 ->leftJoin($this->tabelaColmeia, "{$this->tabela}.colmeia_id", "=", "{$this->tabelaColmeia}.id")
                 ->leftJoin($this->tabelaTipoDoacao, "{$this->tabela}.tipo_doacao_id", "=", "{$this->tabelaTipoDoacao}.id")->select([
                     "{$this->tabela}.*",

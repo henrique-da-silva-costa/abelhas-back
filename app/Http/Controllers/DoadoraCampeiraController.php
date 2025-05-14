@@ -30,7 +30,9 @@ class DoadoraCampeiraController extends Controller
         $inputs = $request->all();
 
         $usuario_id = isset($inputs["usuario_id"]) ? $inputs["usuario_id"] : NULL;
-        $doadoras = $this->doadoraCampeira->pegarTodosSelect($usuario_id);
+        $especie_id = isset($inputs["especie_id"]) ? $inputs["especie_id"] : NULL;
+
+        $doadoras = $this->doadoraCampeira->pegarTodosSelect($usuario_id, $especie_id);
 
         return response()->json($doadoras);
     }
