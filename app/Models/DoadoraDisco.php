@@ -31,11 +31,19 @@ class DoadoraDisco extends Model
             }
 
             $nome = isset($filtros["nome"]) ? $filtros["nome"] : NULL;
+            $genero = isset($filtros["genero"]) ? $filtros["genero"] : NULL;
+            $especie = isset($filtros["especie"]) ? $filtros["especie"] : NULL;
 
             $sql = DB::table($this->tabela);
             $sql->where("usuario_id", "=", $usuario_id);
             if ($nome) {
                 $sql->where("{$this->tabelaColmeia}.nome", "like", "%" . $nome . "%");
+            }
+            if ($genero) {
+                $sql->where("{$this->tabelaColmeia}.genero_id", "=",  $genero);
+            }
+            if ($especie) {
+                $sql->where("{$this->tabelaColmeia}.especie_id", "=",  $especie);
             }
             $sql->leftJoin($this->tabelaColmeia, "{$this->tabela}.colmeia_id", "=", "{$this->tabelaColmeia}.id");
             $sql->leftJoin($this->tabelaTipoDoacao, "{$this->tabela}.tipo_doacao_id", "=", "{$this->tabelaTipoDoacao}.id");
@@ -103,13 +111,23 @@ class DoadoraDisco extends Model
     {
         try {
             if (!is_numeric($id)) {
-                return NULL;
+                return [];
             }
 
-            $dados = DB::table($this->tabela)->where("id", "=", $id)->first();
-            return $dados;
+            $dado = DB::table($this->tabela)
+                ->where("{$this->tabela}.id", "=", $id)
+                ->leftJoin($this->tabelaColmeia, "{$this->tabela}.colmeia_id", "=", "{$this->tabelaColmeia}.id")
+                ->leftJoin($this->tabelaTipoDoacao, "{$this->tabela}.tipo_doacao_id", "=", "{$this->tabelaTipoDoacao}.id")->select([
+                    "{$this->tabela}.*",
+                    "{$this->tabelaColmeia}.nome AS colmeia_nome",
+                    "{$this->tabelaColmeia}.genero_id AS colmeia_genero_id",
+                    "{$this->tabelaTipoDoacao}.tipo AS tipo_doacao_tipo"
+                ])
+                ->first();
+
+            return $dado;
         } catch (\Throwable $th) {
-            return NULL;
+            return $th->getMessage();
         }
     }
 

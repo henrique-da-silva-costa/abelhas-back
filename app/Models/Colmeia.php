@@ -54,12 +54,20 @@ class Colmeia extends Model
             }
 
             $nome = isset($filtros["nome"]) ? $filtros["nome"] : NULL;
+            $genero = isset($filtros["genero"]) ? $filtros["genero"] : NULL;
+            $especie = isset($filtros["especie"]) ? $filtros["especie"] : NULL;
 
             $sql = DB::table($this->tabela . ' as tabela_colmeia');
             $sql->where("tabela_colmeia.status_id", "=", 1);
             $sql->where("tabela_colmeia.usuario_id", "=", $usuario_id);
             if ($nome) {
                 $sql->where("tabela_colmeia.nome", "like", "%" . $nome . "%");
+            }
+            if ($genero) {
+                $sql->where("tabela_colmeia.genero_id", "=",  $genero);
+            }
+            if ($especie) {
+                $sql->where("tabela_colmeia.especie_id", "=",  $especie);
             }
             $sql->leftJoin("{$this->tabelaDoadoraDisco} as dd", "tabela_colmeia.doadora_disco_id", "=", "dd.id");
             $sql->leftJoin("{$this->tabelaDoadoraCampeira} as dc", "tabela_colmeia.doadora_campeira_id", "=", "dc.id");

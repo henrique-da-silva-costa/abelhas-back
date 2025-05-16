@@ -26,6 +26,17 @@ class Especie extends Model
         }
     }
 
+    public function pegarPorId($id)
+    {
+        try {
+            $dados = DB::table($this->tabela)->where("id", "=", $id)->first();
+
+            return $dados;
+        } catch (\Throwable $th) {
+            return [];
+        }
+    }
+
     public function pegarPorGeneroId($genero_id)
     {
         try {

@@ -92,9 +92,18 @@ class ColmeiaController extends Controller
     {
         $id = isset($request["id"]) ? $request["id"] : NULL;
 
-        $colmeias = $this->colmeia->pegarPorId($id);
+        $colmeia = $this->colmeia->pegarPorId($id);
 
-        return response()->json($colmeias);
+        return response()->json($colmeia);
+    }
+
+    public function pegarEspeciePorId(Request $request)
+    {
+        $id = isset($request["id"]) ? $request["id"] : NULL;
+
+        $especie = $this->especie->pegarPorId($id);
+
+        return response()->json($especie);
     }
 
     public function pegarPorUsuarioId(Request $request)
