@@ -154,13 +154,14 @@ class Colmeia extends Model
                     "id",
                     "nome",
                     "descricao",
-                    "img",
+                    "data_criacao",
+                    // "img",
                     "img_caminho",
                     "genero_id",
                     "especie_id",
                     "status_id",
-                    "doadora_campeira_id",
-                    "doadora_disco_id",
+                    // "doadora_campeira_id",
+                    // "doadora_disco_id",
                     "tipo_divisao_id",
                     "usuario_id"
                 ]
@@ -272,7 +273,7 @@ class Colmeia extends Model
             DB::table($this->tabela)->where("id", "=", $id)->update([
                 "nome" => $nome,
                 "descricao" => $descricao,
-                "data_criacao" => $data_criacao,
+                // "data_criacao" => $data_criacao,
                 "data_alteracao" => $data_alteracao,
                 "data_divisao" => $data_divisao,
                 "genero_id" => $genero_id,

@@ -155,35 +155,34 @@ class ColmeiaController extends Controller
 
     public function editar(Request $request)
     {
-        print_r($request->all());
 
         $request->validate([
             "nome" => "required",
-            "data_criacao" => "required",
+            // "data_criacao" => "required",
             "genero_id" => "required",
             "especie_id" => "required",
             "status_id" => "required",
             "usuario_id" => "required",
-            "img" => "image|mimes:jpeg,png,jpg,gif|max:2048",
+            // "img" => "image|mimes:jpeg,png,jpg,gif|max:2048",
         ]);
 
         $inputs = $request->all();
 
-        $imgCaminho = $request->file('img')->store('imagens', 'public');
+        // $imgCaminho = $request->file('img')->store('imagens', 'public');
 
-        $inputs["img"] = "http://" . $_SERVER["HTTP_HOST"] . "/" . "storage" . "/" . $imgCaminho;
-        $inputs["img_caminho"] = $imgCaminho;
+        // $inputs["img"] = "http://" . $_SERVER["HTTP_HOST"] . "/" . "storage" . "/" . $imgCaminho;
+        // $inputs["img_caminho"] = $imgCaminho;
 
         $id = isset($inputs["id"]) ? $inputs["id"] : NULL;
         $status_id = isset($inputs["status_id"]) ? $inputs["status_id"] : NULL;
 
         $colmeia = $this->colmeia->pegarPorId($id);
 
-        $data_criacao = Carbon::create($colmeia->data_criacao);
+        // $data_criacao = Carbon::create($colmeia->data_criacao);
 
         $hoje = Carbon::now();
 
-        $diferenca = $data_criacao->diffInDays($hoje);
+        // $diferenca = $data_criacao->diffInDays($hoje);
 
         $colmeiaMatriz = $this->colmeia->pegarColmeiaMatriz($id);
 
@@ -191,11 +190,11 @@ class ColmeiaController extends Controller
             return response()->json(["erro" => TRUE, "campo" => "status_id", "msg" => "Colmeia matriz não pode ser divisão"]);
         }
 
-        if (!$colmeiaMatriz) {
-            if ($status_id == 2 && $diferenca < 15) {
-                return response()->json(["erro" => TRUE, "campo" => "status_id", "msg" => "Para se tornar matriz deve ter pelomenos 15 dias"]);
-            }
-        }
+        // if (!$colmeiaMatriz) {
+        //     if ($status_id == 2 && $diferenca < 15) {
+        //         return response()->json(["erro" => TRUE, "campo" => "status_id", "msg" => "Para se tornar matriz deve ter pelomenos 15 dias"]);
+        //     }
+        // }
 
         $editar = $this->colmeia->editar($inputs);
 
