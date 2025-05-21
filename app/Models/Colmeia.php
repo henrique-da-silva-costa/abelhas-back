@@ -182,6 +182,7 @@ class Colmeia extends Model
             $nome = isset($filtros["nome"]) ? $filtros["nome"] : NULL;
             $status = isset($filtros["status"]) ? $filtros["status"] : NULL;
             $genero = isset($filtros["genero"]) ? $filtros["genero"] : NULL;
+            $especie = isset($filtros["especie"]) ? $filtros["especie"] : NULL;
 
             $sql = DB::table($this->tabela)->where("usuario_id", "=", $usuario_id);
             if ($nome) {
@@ -192,6 +193,9 @@ class Colmeia extends Model
             }
             if ($genero) {
                 $sql->where("{$this->tabela}.genero_id", "=", $genero);
+            }
+            if ($especie) {
+                $sql->where("{$this->tabela}.especie_id", "=", $especie);
             }
             $sql->orderBy("id", "desc");
             $dados = $sql->paginate(4);
@@ -208,6 +212,7 @@ class Colmeia extends Model
             $retorno = new stdClass;
             $retorno->msg = NULL;
             $retorno->erro = FALSE;
+            $retorno->id = NULL;
 
             $nome = isset($dados["nome"]) ? $dados["nome"] : NULL;
             $descricao = isset($dados["descricao"]) ? $dados["descricao"] : NULL;
@@ -223,7 +228,7 @@ class Colmeia extends Model
             $img_caminho = isset($dados["img_caminho"]) ? $dados["img_caminho"] : NULL;
             $usuario_id = isset($dados["usuario_id"]) ? $dados["usuario_id"] : NULL;
 
-            DB::table($this->tabela)->insert([
+            $retorno->id = DB::table($this->tabela)->insertGetId([
                 "nome" => $nome,
                 "descricao" => $descricao,
                 "data_alteracao" => $data_alteracao,

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Colmeia;
+use App\Models\DoadoraCampeira;
+use App\Models\DoadoraDisco;
 use App\Models\Especie;
 use App\Models\Genero;
 use App\Models\Status;
@@ -15,6 +17,8 @@ class ColmeiaController extends Controller
     private $genero;
     private $especie;
     private $status;
+    private $doadoraDisco;
+    private $doadoraCampeira;
 
     public function __construct()
     {
@@ -22,6 +26,8 @@ class ColmeiaController extends Controller
         $this->genero = new Genero;
         $this->especie = new Especie;
         $this->status = new Status;
+        $this->doadoraDisco = new DoadoraDisco;
+        $this->doadoraCampeira = new DoadoraCampeira;
     }
 
     public function pegarTodos()
@@ -139,6 +145,8 @@ class ColmeiaController extends Controller
 
         $inputs = $request->all();
 
+        $status_id = isset($inputs["status_id"]) ? $inputs["status_id"] : NULL;
+
         $imgCaminho = $request->file('img')->store('imagens', 'public');
 
         $inputs["img"] = "http://" . $_SERVER["HTTP_HOST"] . "/" . "storage" . "/" . $imgCaminho;
@@ -148,6 +156,18 @@ class ColmeiaController extends Controller
 
         if ($cadastrar->erro) {
             return response()->json(["erro" => TRUE, "msg" => $cadastrar->msg]);
+        }
+
+        if ($status_id == 2) {
+            $cadastrarParaDoarDisco = $this->doadoraDisco->cadastrar($cadastrar->id);
+            if ($cadastrarParaDoarDisco->erro) {
+                return response()->json(["erro" => TRUE, "msg" => $cadastrarParaDoarDisco->msg]);
+            }
+
+            $cadastrarParaDoarCampeira = $this->doadoraCampeira->cadastrar($cadastrar->id);
+            if ($cadastrarParaDoarCampeira->erro) {
+                return response()->json(["erro" => TRUE, "msg" => $cadastrarParaDoarCampeira->msg]);
+            }
         }
 
         return response()->json(["msg" => "Colmeia cadastrada com sucesso!"]);

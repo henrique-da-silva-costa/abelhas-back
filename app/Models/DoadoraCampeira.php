@@ -138,7 +138,7 @@ class DoadoraCampeira extends Model
         }
     }
 
-    public function cadastrar($dados)
+    public function cadastrar($colmeia_id)
     {
         try {
             $resposta = new stdClass;
@@ -146,12 +146,9 @@ class DoadoraCampeira extends Model
             $resposta->msg = NULL;
             $resposta->id = NULL;
 
-            $colmeia_id = isset($dados["colmeia_id"]) ? $dados["colmeia_id"] : NULL;
-            $tipo_doacao_id = isset($dados["tipo_doacao_id"]) ? $dados["tipo_doacao_id"] : NULL;
-
             DB::table($this->tabela)->insert([
                 "colmeia_id" => $colmeia_id,
-                "tipo_doacao_id" => $tipo_doacao_id
+                "tipo_doacao_id" => 2
             ]);
 
             return $resposta;
