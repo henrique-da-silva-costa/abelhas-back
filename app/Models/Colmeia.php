@@ -13,7 +13,6 @@ class Colmeia extends Model
     private $tabelaDoadoraDisco;
     private $tabelaDoadoraCampeira;
     private $tabelaTipoDivisao;
-    private $tabelaTipoDoacao;
 
     public function __construct()
     {
@@ -172,6 +171,22 @@ class Colmeia extends Model
         }
     }
 
+    public function pegarPorIdImg($id)
+    {
+        try {
+            $dados = DB::table($this->tabela)->where("id", "=", $id)->first(
+                [
+                    "id",
+                    "img",
+                    "img_caminho"
+                ]
+            );
+            return $dados;
+        } catch (\Throwable $th) {
+            return NULL;
+        }
+    }
+
     public function pegarPorUsuarioId($usuario_id, $filtros)
     {
         try {
@@ -286,6 +301,33 @@ class Colmeia extends Model
                 "status_id" => $status_id,
                 "doadora_disco_id" => $doadora_disco_id,
                 "doadora_campeira_id" => $doadora_campeira_id,
+                "img" => $img,
+                "img_caminho" => $img_caminho,
+                "usuario_id" => $usuario_id,
+            ]);
+
+            return $retorno;
+        } catch (\Throwable $th) {
+            $retorno = new stdClass;
+            $retorno->msg = $th->getMessage();
+            $retorno->erro = TRUE;
+
+            return $retorno;
+        }
+    }
+    public function editarImg($dados)
+    {
+        try {
+            $retorno = new stdClass;
+            $retorno->msg = NULL;
+            $retorno->erro = FALSE;
+
+            $id = isset($dados["id"]) ? $dados["id"] : NULL;
+            $img = isset($dados["img"]) ? $dados["img"] : NULL;
+            $img_caminho = isset($dados["img_caminho"]) ? $dados["img_caminho"] : NULL;
+            $usuario_id = isset($dados["usuario_id"]) ? $dados["usuario_id"] : NULL;
+
+            DB::table($this->tabela)->where("id", "=", $id)->update([
                 "img" => $img,
                 "img_caminho" => $img_caminho,
                 "usuario_id" => $usuario_id,

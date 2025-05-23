@@ -103,6 +103,15 @@ class ColmeiaController extends Controller
         return response()->json($colmeia);
     }
 
+    public function pegarPorIdImg(Request $request)
+    {
+        $id = isset($request["id"]) ? $request["id"] : NULL;
+
+        $colmeia = $this->colmeia->pegarPorIdImg($id);
+
+        return response()->json($colmeia);
+    }
+
     public function pegarEspeciePorId(Request $request)
     {
         $id = isset($request["id"]) ? $request["id"] : NULL;
@@ -215,6 +224,32 @@ class ColmeiaController extends Controller
         //         return response()->json(["erro" => TRUE, "campo" => "status_id", "msg" => "Para se tornar matriz deve ter pelomenos 15 dias"]);
         //     }
         // }
+
+        $editar = $this->colmeia->editar($inputs);
+
+        if ($editar->erro) {
+            return response()->json(["erro" => TRUE, "msg" => $editar->msg]);
+        }
+
+        return response()->json(["msg" => "Colmeia editada com sucesso!"]);
+    }
+
+    public function editarImg(Request $request)
+    {
+        $request->validate([
+            "id" => "required",
+            // "img" => "image|mimes:jpeg,png,jpg,gif|max:2048",
+        ]);
+
+        $inputs = $request->all();
+
+
+        print_r($_FILES);
+
+        $imgCaminho = $request->file('img')->store('imagens', 'public');
+
+        $inputs["img"] = "http://" . $_SERVER["HTTP_HOST"] . "/" . "storage" . "/" . $imgCaminho;
+        $inputs["img_caminho"] = $imgCaminho;
 
         $editar = $this->colmeia->editar($inputs);
 

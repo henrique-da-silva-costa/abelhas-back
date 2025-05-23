@@ -33,8 +33,10 @@ Route::get("/especies", [ColmeiaController::class, "pegarPorGeneroId"])->name("C
 Route::get("/status", [ColmeiaController::class, "pegarStatus"])->name("ColmeiaController.pegarStatus");
 Route::get("/colmeias", [ColmeiaController::class, "pegarPorUsuarioId"])->name("ColmeiaController.pegarPorUsuarioId");
 Route::get("/colmeia", [ColmeiaController::class, "pegarPorId"])->name("ColmeiaController.pegarPorId");
+Route::get("/colmeia/img", [ColmeiaController::class, "pegarPorIdImg"])->name("ColmeiaController.pegarPorIdImg");
 Route::post("/colmeia/cadastrar", [ColmeiaController::class, "cadastrar"])->name("ColmeiaController.cadastrar");
 Route::put("/colmeia/editar", [ColmeiaController::class, "editar"])->name("ColmeiaController.editar");
+Route::put("/colmeia/editar/img", [ColmeiaController::class, "editarImg"])->name("ColmeiaController.editarImg");
 Route::options("/colmeia/excluir", [ColmeiaController::class, "excluir"])->name("ColmeiaController.excluir");
 // Colmeia
 
