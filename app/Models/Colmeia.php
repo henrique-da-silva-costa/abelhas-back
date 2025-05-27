@@ -171,6 +171,21 @@ class Colmeia extends Model
         }
     }
 
+    public function pegarPorDodoraId($id)
+    {
+        try {
+            $dados = DB::table($this->tabela)->where("doadora_disco_id", "=", $id)->orWhere("doadora_campeira_id", "=", $id)->first(
+                [
+                    "id",
+                    "data_criacao",
+                ]
+            );
+            return $dados;
+        } catch (\Throwable $th) {
+            return NULL;
+        }
+    }
+
     public function pegarPorIdImg($id)
     {
         try {

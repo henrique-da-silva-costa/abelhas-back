@@ -155,6 +155,25 @@ class ColmeiaController extends Controller
         $inputs = $request->all();
 
         $status_id = isset($inputs["status_id"]) ? $inputs["status_id"] : NULL;
+        $doadora_disco_id = isset($inputs["doadora_disco_id"]) ? $inputs["doadora_disco_id"] : NULL;
+        $doadora_campeira_id = isset($inputs["doadora_campeira_id"]) ? $inputs["doadora_campeira_id"] : NULL;
+
+        $existeDoadoraDisco = $this->colmeia->pegarPorDodoraId($doadora_campeira_id);
+        $existeDoadoraCampeira = $this->colmeia->pegarPorDodoraId($doadora_campeira_id);
+
+
+        $dataDoadoraDisco = $existeDoadoraDisco ? Carbon::createFromFormat("Y-m-d", $existeDoadoraDisco->data_criacao) : NULL;
+        $dataDoadoraCampeira = $existeDoadoraCampeira ? Carbon::createFromFormat("Y-m-d", $existeDoadoraCampeira->data_criacao) : NULL;
+        $hoje = Carbon::now();
+
+        if ($existeDoadoraDisco) {
+            return response()->json(["erro" => TRUE, "campo" => "doadora_disco_id", "msg" => "Esse colmeia já esta sendo usada"]);
+        }
+        if ($existeDoadoraCampeira) {
+            return response()->json(["erro" => TRUE, "campo" => "doadora_campeira_id", "msg" => "Esse colmeia já esta sendo usada"]);
+        }
+
+        $existeDoadoraCampeira = $this->colmeia->pegarPorDodoraId($doadora_disco_id);
 
         $imgCaminho = $request->file('img')->store('imagens', 'public');
 
@@ -195,7 +214,11 @@ class ColmeiaController extends Controller
             // "img" => "image|mimes:jpeg,png,jpg,gif|max:2048",
         ]);
 
+
+
         $inputs = $request->all();
+
+        print_r($inputs["data_cricao"]);
 
         // $imgCaminho = $request->file('img')->store('imagens', 'public');
 
