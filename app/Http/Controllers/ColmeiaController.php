@@ -158,20 +158,23 @@ class ColmeiaController extends Controller
         $doadora_disco_id = isset($inputs["doadora_disco_id"]) ? $inputs["doadora_disco_id"] : NULL;
         $doadora_campeira_id = isset($inputs["doadora_campeira_id"]) ? $inputs["doadora_campeira_id"] : NULL;
 
-        $existeDoadoraDisco = $this->colmeia->pegarPorDodoraId($doadora_campeira_id);
-        $existeDoadoraCampeira = $this->colmeia->pegarPorDodoraId($doadora_campeira_id);
+        $existeDoadoraDisco = $this->colmeia->pegarPorDodoraDiscoId($doadora_campeira_id);
+        $existeDoadoraCampeira = $this->colmeia->pegarPorDodoraCampeiraId($doadora_campeira_id);
 
 
         $dataDoadoraDisco = $existeDoadoraDisco ? Carbon::createFromFormat("Y-m-d", $existeDoadoraDisco->data_criacao) : NULL;
         $dataDoadoraCampeira = $existeDoadoraCampeira ? Carbon::createFromFormat("Y-m-d", $existeDoadoraCampeira->data_criacao) : NULL;
         $hoje = Carbon::now();
 
-        if ($existeDoadoraDisco) {
-            return response()->json(["erro" => TRUE, "campo" => "doadora_disco_id", "msg" => "Esse colmeia já esta sendo usada"]);
+        if ($hoje->diffInDays($dataDoadoraCampeira) < 30 || $hoje->diffInDays($dataDoadoraDisco) < 30) {
+            if ($existeDoadoraDisco) {
+                return response()->json(["erro" => TRUE, "campo" => "doadora_disco_id", "msg" => "Esse colmeia já esta sendo usada"]);
+            }
+            if ($existeDoadoraCampeira) {
+                return response()->json(["erro" => TRUE, "campo" => "doadora_campeira_id", "msg" => "Esse colmeia já esta sendo usada"]);
+            }
         }
-        if ($existeDoadoraCampeira) {
-            return response()->json(["erro" => TRUE, "campo" => "doadora_campeira_id", "msg" => "Esse colmeia já esta sendo usada"]);
-        }
+
 
         $existeDoadoraCampeira = $this->colmeia->pegarPorDodoraId($doadora_disco_id);
 

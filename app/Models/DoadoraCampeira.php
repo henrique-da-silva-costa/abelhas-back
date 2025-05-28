@@ -120,6 +120,20 @@ class DoadoraCampeira extends Model
         }
     }
 
+    public function pegarPorColmeiaId($id)
+    {
+        try {
+            if (!is_numeric($id)) {
+                return NULL;
+            }
+
+            $dados = DB::table($this->tabela)->where("colmeia_id", "=", $id)->first();
+            return $dados;
+        } catch (\Throwable $th) {
+            return NULL;
+        }
+    }
+
     public function existeDoadora($dados)
     {
         try {
