@@ -127,7 +127,7 @@ class DoadoraCampeira extends Model
                 return NULL;
             }
 
-            $dados = DB::table($this->tabela)->where("colmeia_id", "=", $id)->first();
+            $dados = DB::table($this->tabela)->where("colmeia_id", "=", $id)->orderBy("desc")->first();
             return $dados;
         } catch (\Throwable $th) {
             return NULL;
@@ -174,20 +174,15 @@ class DoadoraCampeira extends Model
             return $resposta;
         }
     }
-    public function editar($dados)
+    public function editar($id, $data_doacao)
     {
         try {
             $resposta = new stdClass;
             $resposta->erro = FALSE;
             $resposta->msg = NULL;
 
-            $id = isset($dados["id"]) ? $dados["id"] : NULL;
-            $colmeia_id = isset($dados["colmeia_id"]) ? $dados["colmeia_id"] : NULL;
-            $tipo_doacao_id = isset($dados["tipo_doacao_id"]) ? $dados["tipo_doacao_id"] : NULL;
-
-            $dados = DB::table($this->tabela)->where("id", "=", $id)->update([
-                "colmeia_id" => $colmeia_id,
-                "tipo_doacao_id" => $tipo_doacao_id
+            DB::table($this->tabela)->where("id", "=", $id)->update([
+                "data_doacao" => $data_doacao,
             ]);
 
             return $resposta;

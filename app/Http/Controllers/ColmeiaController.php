@@ -19,6 +19,7 @@ class ColmeiaController extends Controller
     private $status;
     private $doadoraDisco;
     private $doadoraCampeira;
+    private $hoje;
 
     public function __construct()
     {
@@ -28,6 +29,7 @@ class ColmeiaController extends Controller
         $this->status = new Status;
         $this->doadoraDisco = new DoadoraDisco;
         $this->doadoraCampeira = new DoadoraCampeira;
+        $this->hoje = Carbon::now();
     }
 
     public function pegarTodos()
@@ -152,31 +154,43 @@ class ColmeiaController extends Controller
             "img" => "image|mimes:jpeg,png,jpg,gif|max:2048",
         ]);
 
+
         $inputs = $request->all();
 
         $status_id = isset($inputs["status_id"]) ? $inputs["status_id"] : NULL;
         $doadora_disco_id = isset($inputs["doadora_disco_id"]) ? $inputs["doadora_disco_id"] : NULL;
         $doadora_campeira_id = isset($inputs["doadora_campeira_id"]) ? $inputs["doadora_campeira_id"] : NULL;
 
-        $existeDoadoraDisco = $this->colmeia->pegarPorDodoraDiscoId($doadora_campeira_id);
-        $existeDoadoraCampeira = $this->colmeia->pegarPorDodoraCampeiraId($doadora_campeira_id);
+        if ($doadora_disco_id) {
+            $existeDoadoraDisco = $this->colmeia->pegarPorDodoraDiscoId($doadora_disco_id);
+        }
+
+        if ($doadora_campeira_id) {
+            $existeDoadoraCampeira = $this->colmeia->pegarPorDodoraCampeiraId($doadora_campeira_id);
+        }
+
+        $dataDoadoraDisco = isset($existeDoadoraDisco->data_doacao) ? Carbon::createFromFormat("Y-m-d", $existeDoadoraDisco->data_doacao) : NULL;
+        $dataDoadoraCampeira = isset($existeDoadoraCampeira->data_doacao) ? Carbon::createFromFormat("Y-m-d", $existeDoadoraCampeira->data_doacao) : NULL;
 
 
-        $dataDoadoraDisco = $existeDoadoraDisco ? Carbon::createFromFormat("Y-m-d", $existeDoadoraDisco->data_criacao) : NULL;
-        $dataDoadoraCampeira = $existeDoadoraCampeira ? Carbon::createFromFormat("Y-m-d", $existeDoadoraCampeira->data_criacao) : NULL;
-        $hoje = Carbon::now();
 
-        if ($hoje->diffInDays($dataDoadoraCampeira) < 30 || $hoje->diffInDays($dataDoadoraDisco) < 30) {
-            if ($existeDoadoraDisco) {
-                return response()->json(["erro" => TRUE, "campo" => "doadora_disco_id", "msg" => "Esse colmeia já esta sendo usada"]);
-            }
-            if ($existeDoadoraCampeira) {
-                return response()->json(["erro" => TRUE, "campo" => "doadora_campeira_id", "msg" => "Esse colmeia já esta sendo usada"]);
+        // $dataEspecialTeste = Carbon::createFromFormat("Y-m-d", "2025-08-15");
+
+        if ($doadora_campeira_id > 0 || $doadora_disco_id > 0) {
+            if ($dataDoadoraCampeira || $dataDoadoraDisco) {
+                if ($dataDoadoraCampeira->diffInDays(Carbon::now()) < 60 || $dataDoadoraDisco->diffInDays(Carbon::now()) < 60) {
+                    if ($existeDoadoraDisco) {
+                        return response()->json(["erro" => TRUE, "campo" => "doadora_disco_id", "msg" => "Esse colmeia já esta sendo usada"]);
+                    }
+
+                    if ($existeDoadoraCampeira) {
+                        return response()->json(["erro" => TRUE, "campo" => "doadora_campeira_id", "msg" => "Esse colmeia já esta sendo usada"]);
+                    }
+                }
             }
         }
 
-
-        $existeDoadoraCampeira = $this->colmeia->pegarPorDodoraId($doadora_disco_id);
+        // $existeDoadoraCampeira = $this->colmeia->pegarPorDodoraId($doadora_disco_id);
 
         $imgCaminho = $request->file('img')->store('imagens', 'public');
 
@@ -187,6 +201,22 @@ class ColmeiaController extends Controller
 
         if ($cadastrar->erro) {
             return response()->json(["erro" => TRUE, "msg" => $cadastrar->msg]);
+        }
+
+        if ($status_id == 1) {
+            if ($doadora_campeira_id > 0 || $doadora_disco_id > 0) {
+                $colmeia = $this->colmeia->pegarPorId($cadastrar->id);
+
+                $editarDoadoraCampeira = $this->doadoraCampeira->editar($doadora_campeira_id,  $colmeia->data_criacao);
+                if ($editarDoadoraCampeira->erro) {
+                    return response()->json(["erro" => TRUE, "msg" => $editarDoadoraCampeira->msg]);
+                }
+
+                $editarDoadoraDisco = $this->doadoraDisco->editar($doadora_disco_id, $colmeia->data_criacao);
+                if ($editarDoadoraDisco->erro) {
+                    return response()->json(["erro" => TRUE, "msg" => $editarDoadoraDisco->msg]);
+                }
+            }
         }
 
         if ($status_id == 2) {
@@ -209,7 +239,7 @@ class ColmeiaController extends Controller
 
         $request->validate([
             "nome" => "required",
-            // "data_criacao" => "required",
+            "data_criacao" => "required",
             "genero_id" => "required",
             "especie_id" => "required",
             "status_id" => "required",
@@ -217,39 +247,28 @@ class ColmeiaController extends Controller
             // "img" => "image|mimes:jpeg,png,jpg,gif|max:2048",
         ]);
 
-
-
         $inputs = $request->all();
 
-        print_r($inputs["data_cricao"]);
 
-        // $imgCaminho = $request->file('img')->store('imagens', 'public');
+        $dataCriacao = isset($inputs["data_criacao"]) ? $inputs["data_criacao"] : NULL;
+        $status = isset($inputs["status"]) ? $inputs["status"] : NULL;
 
-        // $inputs["img"] = "http://" . $_SERVER["HTTP_HOST"] . "/" . "storage" . "/" . $imgCaminho;
-        // $inputs["img_caminho"] = $imgCaminho;
+        $dataCriacao = Carbon::createFromFormat("Y-m-d", $dataCriacao);
+
+        if ($this->hoje->diffInMonths($dataCriacao) < 6 && $status == 1) {
+            return response()->json(["erro" => true, "campo" => "data_descricao", "msg" => "A colmeia so pode ser matriz após 6 meses de sua criação"]);
+        }
 
         $id = isset($inputs["id"]) ? $inputs["id"] : NULL;
         $status_id = isset($inputs["status_id"]) ? $inputs["status_id"] : NULL;
 
         $colmeia = $this->colmeia->pegarPorId($id);
 
-        // $data_criacao = Carbon::create($colmeia->data_criacao);
-
-        $hoje = Carbon::now();
-
-        // $diferenca = $data_criacao->diffInDays($hoje);
-
         $colmeiaMatriz = $this->colmeia->pegarColmeiaMatriz($id);
 
         if ($colmeiaMatriz && $status_id == 1) {
             return response()->json(["erro" => TRUE, "campo" => "status_id", "msg" => "Colmeia matriz não pode ser divisão"]);
         }
-
-        // if (!$colmeiaMatriz) {
-        //     if ($status_id == 2 && $diferenca < 15) {
-        //         return response()->json(["erro" => TRUE, "campo" => "status_id", "msg" => "Para se tornar matriz deve ter pelomenos 15 dias"]);
-        //     }
-        // }
 
         $editar = $this->colmeia->editar($inputs);
 
@@ -262,6 +281,7 @@ class ColmeiaController extends Controller
 
     public function editarImg(Request $request)
     {
+        print_r($_FILES["img"]);
         $request->validate([
             "id" => "required",
             // "img" => "image|mimes:jpeg,png,jpg,gif|max:2048",
@@ -270,7 +290,6 @@ class ColmeiaController extends Controller
         $inputs = $request->all();
 
 
-        print_r($_FILES);
 
         $imgCaminho = $request->file('img')->store('imagens', 'public');
 

@@ -83,7 +83,7 @@ class Colmeia extends Model
 
             return $dados;
         } catch (\Throwable $th) {
-            return [$th->getMessage()];
+            return [];
         }
     }
 
@@ -154,14 +154,10 @@ class Colmeia extends Model
                     "nome",
                     "descricao",
                     "data_criacao",
-                    // "img",
                     "img_caminho",
                     "genero_id",
                     "especie_id",
                     "status_id",
-                    // "doadora_campeira_id",
-                    // "doadora_disco_id",
-                    "tipo_divisao_id",
                     "usuario_id"
                 ]
             );
@@ -174,12 +170,12 @@ class Colmeia extends Model
     public function pegarPorDodoraDiscoId($id)
     {
         try {
-            $dados = DB::table($this->tabela)
-                ->where("doadora_disco_id", "=", $id)
+            $dados = DB::table($this->tabelaDoadoraDisco)
+                ->where("id", "=", $id)
                 ->first(
                     [
                         "id",
-                        "data_criacao",
+                        "data_doacao",
                     ]
                 );
             return $dados;
@@ -191,12 +187,12 @@ class Colmeia extends Model
     public function pegarPorDodoraCampeiraId($id)
     {
         try {
-            $dados = DB::table($this->tabela)
-                ->where("doadora_campeira_id", "=", $id)
+            $dados = DB::table($this->tabelaDoadoraCampeira)
+                ->where("id", "=", $id)
                 ->first(
                     [
                         "id",
-                        "data_criacao",
+                        "data_doacao",
                     ]
                 );
             return $dados;
