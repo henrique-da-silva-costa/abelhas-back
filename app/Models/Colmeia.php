@@ -34,6 +34,17 @@ class Colmeia extends Model
         }
     }
 
+    public function pegarTodasDivisoesParaVerificarData()
+    {
+        try {
+            $dados = DB::table($this->tabela)->where("status_id", "=", 1)->get(["id", "data_criacao"]);
+
+            return $dados;
+        } catch (\Throwable $th) {
+            return $th->getMessage();
+        }
+    }
+
     public function pegarTipoDivisao()
     {
         try {
@@ -361,6 +372,26 @@ class Colmeia extends Model
                 "img" => $img,
                 "img_caminho" => $img_caminho,
                 "usuario_id" => $usuario_id,
+            ]);
+
+            return $retorno;
+        } catch (\Throwable $th) {
+            $retorno = new stdClass;
+            $retorno->msg = $th->getMessage();
+            $retorno->erro = TRUE;
+
+            return $retorno;
+        }
+    }
+    public function editarStatus($id)
+    {
+        try {
+            $retorno = new stdClass;
+            $retorno->msg = NULL;
+            $retorno->erro = FALSE;
+
+            DB::table($this->tabela)->where("id", "=", $id)->update([
+                "status_id" => 2
             ]);
 
             return $retorno;

@@ -32,6 +32,17 @@ class ColmeiaController extends Controller
         $this->hoje = Carbon::now();
     }
 
+    public function transformarDivisaoEmMatriz()
+    {
+        $colmeias = $this->colmeia->pegarTodasDivisoesParaVerificarData();
+
+        foreach ($colmeias as $colmeia) {
+            if (Carbon::now()->diffInMonths(Carbon::createFromFormat("Y-m-d", $colmeia->data_criacao)) >= 6) {
+                $this->colmeia->editarStatus($colmeia->id);
+            }
+        }
+    }
+
     public function pegarTodos()
     {
         $colmeias = $this->colmeia->pegarTodos();
