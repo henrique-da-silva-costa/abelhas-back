@@ -203,7 +203,7 @@ class ColmeiaController extends Controller
 
         // $existeDoadoraCampeira = $this->colmeia->pegarPorDodoraId($doadora_disco_id);
 
-        $imgCaminho = $request->file('img')->store('imagens', 'public');
+        $imgCaminho = $request->file("img") ? $request->file('img')->store('imagens', 'public') : NULL;
 
         $inputs["img"] = "http://" . $_SERVER["HTTP_HOST"] . "/" . "storage" . "/" . $imgCaminho;
         $inputs["img_caminho"] = $imgCaminho;
