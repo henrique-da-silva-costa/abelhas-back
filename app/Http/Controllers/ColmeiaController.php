@@ -205,7 +205,7 @@ class ColmeiaController extends Controller
 
         $imgCaminho = $request->file("img") ? $request->file('img')->store('imagens', 'public') : NULL;
 
-        $inputs["img"] = "http://" . $_SERVER["HTTP_HOST"] . "/" . "storage" . "/" . $imgCaminho;
+        $inputs["img"] = $request->file("img") ? "http://" . $_SERVER["HTTP_HOST"] . "/" . "storage" . "/" . $imgCaminho : NULL;
         $inputs["img_caminho"] = $imgCaminho;
 
         $cadastrar = $this->colmeia->cadastrar($inputs);
