@@ -163,6 +163,17 @@ class DoadoraDisco extends Model
         }
     }
 
+    public function existeColmeia($colmeia_id)
+    {
+        try {
+            $dado = DB::table($this->tabela)->where("colmeia_id", "=", $colmeia_id)->first();
+
+            return $dado;
+        } catch (\Throwable $th) {
+            return NULL;
+        }
+    }
+
     public function cadastrar($colmeia_id)
     {
         try {

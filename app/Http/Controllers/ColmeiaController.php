@@ -326,6 +326,18 @@ class ColmeiaController extends Controller
             return response()->json(["erro" => TRUE, "msg" => "Colmeia não encontrada"]);
         }
 
+
+        $colemiaDoadoraCampeira = $this->doadoraCampeira->existeColmeia($id);
+        $colemiaDoadoraDisco = $this->doadoraDisco->existeColmeia($id);
+
+        if ($colemiaDoadoraCampeira) {
+            return response()->json(["erro" => true, "msg" => "Essa colmeia é uma doadora não pode ser excluida"]);
+        }
+
+        if ($colemiaDoadoraDisco) {
+            return response()->json(["erro" => true, "msg" => "Essa colmeia é uma doadora não pode ser excluida"]);
+        }
+
         $excluir = $this->colmeia->excluir($inputs);
 
         if ($excluir->erro) {
